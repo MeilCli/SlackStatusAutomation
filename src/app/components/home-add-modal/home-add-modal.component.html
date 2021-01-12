@@ -1,0 +1,42 @@
+<div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Add Automation</h4>
+    <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <form>
+        <div class="form-group">
+            <label for="conditionName">Name</label>
+            <div class="input-group">
+                <input
+                    id="conditionName"
+                    class="form-control"
+                    placeholder="Automation name"
+                    type="text"
+                    [(ngModel)]="editableConditionGroup.name"
+                    [ngModelOptions]="{ standalone: true }"
+                />
+            </div>
+            <label>Conditions</label>
+            <div class="input-group mb-2" *ngFor="let condition of editableConditionGroup.conditions; index as i">
+                <select class="form-control" [(ngModel)]="condition.type" [ngModelOptions]="{ standalone: true }">
+                    <option selected>Ip</option>
+                    <option>Wifi</option>
+                </select>
+                <input
+                    class="form-control"
+                    [placeholder]="condition.type == 'Ip' ? 'IP Address' : 'Wifi SSID'"
+                    type="text"
+                    [(ngModel)]="condition.value"
+                    [ngModelOptions]="{ standalone: true }"
+                />
+                <button type="button" class="btn btn-danger" (click)="removeEditableCondition(i)">Remove</button>
+            </div>
+            <button type="button" class="btn btn-primary" (click)="addEditableCondition()">Add condition</button>
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-outline-dark" (click)="activeModal.close(result())">Save</button>
+</div>

@@ -1,0 +1,5 @@
+<ul ngbNav [activeId]="activePath" class="nav-tabs">
+    <li [ngbNavItem]="link.path" *ngFor="let link of links">
+        <a ngbNavLink [routerLink]="'/' + link.path">{{ link.title }}</a>
+    </li>
+</ul>

@@ -1,0 +1,118 @@
+<app-header></app-header>
+<div class="container">
+    <h2>SlackStatusAutomation</h2>
+    <p>Automation: {{ automationEnabled ? "On" : "Off" }}</p>
+    <div class="row">
+        <div class="col btn-group btn-group-toggle" ngbRadioGroup name="radioBasic" [(ngModel)]="automationEnabled">
+            <label ngbButtonLabel class="btn-primary"> <input ngbButton type="radio" [value]="true" /> On </label>
+            <label ngbButtonLabel class="btn-light"> <input ngbButton type="radio" [value]="false" /> Off </label>
+        </div>
+        <div class="col input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1">Interval Seconds</span>
+            </div>
+            <input
+                type="number"
+                class="form-control"
+                min="30"
+                step="5"
+                aria-describedby="basic-addon1"
+                [(ngModel)]="intervalSeconds"
+            />
+        </div>
+    </div>
+
+    <!-- StatusAutomations -->
+    <h3 class="mt-5">
+        Automations
+        <button type="button" class="btn btn-primary float-right" (click)="openAddStatusAutomationModal()">
+            Add automation
+        </button>
+    </h3>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item" *ngFor="let statusAutomation of statusAutomations; index as i">
+            <h4 class="mb-3">
+                {{ statusAutomation.conditionGroup.name
+                }}<button
+                    type="button"
+                    class="btn btn-danger float-right ml-2"
+                    (click)="onStatusAutomationRemoveClicked(i)"
+                >
+                    Delete</button
+                ><button type="button" class="btn btn-primary float-right" (click)="openEditStatusAutomationModal(i)">
+                    Edit
+                </button>
+            </h4>
+            <ng-template #statusAutomationEmojiPicker>
+                <emoji-mart
+                    [custom]="customEmojis"
+                    (emojiClick)="onStatusAutomationEmojiClicked($event, i)"
+                    [isNative]="true"
+                ></emoji-mart>
+            </ng-template>
+            <div class="col input-group">
+                <ngx-emoji
+                    [emoji]="(statusAutomation.status.emoji | emoji) || ''"
+                    [size]="24"
+                    [isNative]="true"
+                ></ngx-emoji>
+                <button
+                    #popoverStatusAutomationEmoji="ngbPopover"
+                    class="btn btn-outline-secondary"
+                    type="Button"
+                    [autoClose]="'outside'"
+                    [ngbPopover]="statusAutomationEmojiPicker"
+                    triggers="manual"
+                    (click)="toggleStatusAutomationPopover(popoverStatusAutomationEmoji)"
+                    popoverTitle="Choose Emoji"
+                >
+                    Change Emoji
+                </button>
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon-status-automation-message">Message</span>
+                </div>
+                <input
+                    type="text"
+                    class="form-control"
+                    aria-describedby="basic-addon-status-automation-message"
+                    (input)="onStatusAutomationChanged()"
+                    [(ngModel)]="statusAutomation.status.message"
+                />
+            </div>
+        </li>
+    </ul>
+
+    <!-- DefaultStatus -->
+    <h3 class="mt-5">Default Status</h3>
+    <ng-template #defaultStatusEmojiPicker>
+        <emoji-mart
+            [custom]="customEmojis"
+            (emojiClick)="onDefaultStatusEmojiClicked($event)"
+            [isNative]="true"
+        ></emoji-mart>
+    </ng-template>
+    <div class="col input-group">
+        <ngx-emoji [emoji]="(defaultStatus.emoji | emoji) || ''" [size]="24" [isNative]="true"></ngx-emoji>
+        <button
+            class="btn btn-outline-secondary"
+            type="Button"
+            [autoClose]="'outside'"
+            [ngbPopover]="defaultStatusEmojiPicker"
+            popoverTitle="Choose Emoji"
+        >
+            Change Emoji
+        </button>
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon-default-status-message">Message</span>
+        </div>
+        <input
+            type="text"
+            class="form-control"
+            aria-describedby="basic-addon-default-status-message"
+            (input)="onDefaultStatusChanged()"
+            [(ngModel)]="defaultStatus.message"
+        />
+    </div>
+
+    <div class="mb-5"></div>
+</div>

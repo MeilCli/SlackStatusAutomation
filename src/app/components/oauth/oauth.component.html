@@ -1,0 +1,29 @@
+<div class="container">
+    <div class="input-group">
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon1">Client Id</span>
+        </div>
+        <input type="text" class="form-control" aria-describedby="basic-addon1" [(ngModel)]="customClientId" />
+    </div>
+    <div class="input-group">
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon2">Client Secret</span>
+        </div>
+        <input type="text" class="form-control" aria-describedby="basic-addon2" [(ngModel)]="customClientSecret" />
+    </div>
+    <div class="text-center">
+        <button type="button" class="btn btn-primary mb-2" (click)="onClickCustomAuthenticate()">
+            Authenticate by custom application
+        </button>
+    </div>
+
+    <hr class="mb-3" />
+
+    <div class="text-center">
+        <div *ngFor="let application of environment.applications; index as i">
+            <button type="button" class="btn btn-primary mb-5" (click)="onClickAuthenticate(i)">
+                Authenticate to {{ application.name }}
+            </button>
+        </div>
+    </div>
+</div>
