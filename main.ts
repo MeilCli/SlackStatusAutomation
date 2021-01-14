@@ -11,7 +11,11 @@ const args = process.argv.slice(1),
     serve = args.some((val) => val === "--serve");
 const mb = menubar({
     index: false,
-    browserWindow: { width: 600, height: 800, webPreferences: { enableRemoteModule: true } },
+    browserWindow: {
+        width: 600,
+        height: 800,
+        webPreferences: { nodeIntegration: true, contextIsolation: false, enableRemoteModule: true },
+    },
 });
 
 function createWindow(): BrowserWindow {
@@ -64,9 +68,7 @@ try {
     });
     mb.on("after-create-window", () => {
         const menuWindow = mb.window;
-        console.log(`mb.create-window ${menuWindow != undefined}\n`);
         if (menuWindow != undefined) {
-            console.log(`mb.create-window load serve ${serve}`);
             if (serve) {
                 menuWindow.webContents.openDevTools();
 
@@ -75,7 +77,7 @@ try {
                 });
                 menuWindow.loadURL("http://localhost:4200");
             } else {
-                menuWindow.loadURL(`file://${path.join(__dirname, "dist/index.html")}`);
+                menuWindow.loadURL(`file://${__dirname}/dist/slack-status-automation/index.html`);
             }
         }
     });
