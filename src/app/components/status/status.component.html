@@ -1,0 +1,38 @@
+<ng-template #statusEmojiPicker style="max-width: 400px">
+    <emoji-mart [custom]="customEmojis" (emojiClick)="onStatusEmojiClicked($event)" [isNative]="true"></emoji-mart>
+</ng-template>
+<div class="col input-group">
+    <div class="input-group-prepend" id="addon-prepend">
+        <span class="input-group-text">Status</span>
+        <button
+            class="btn btn-outline-secondary"
+            type="button"
+            #popoverStatusEmojiPicker="ngbPopover"
+            [autoClose]="'outside'"
+            [ngbPopover]="statusEmojiPicker"
+            triggers="manual"
+            (click)="toggleStatusEmojiPopover(popoverStatusEmojiPicker)"
+        >
+            <ngx-emoji
+                *ngIf="status.emoji != null"
+                [emoji]="(status.emoji | emoji) || ''"
+                [size]="16"
+                [isNative]="true"
+            ></ngx-emoji>
+            <mat-icon *ngIf="status.emoji == null" fontSet="material-icons-two-tone"> emoji_emotions </mat-icon>
+        </button>
+    </div>
+    <input
+        type="text"
+        class="form-control"
+        aria-describedby="addon-prepend"
+        aria-describedby="addon-append"
+        (input)="onStatusChanged()"
+        [(ngModel)]="status.message"
+    />
+    <div class="input-group-append" id="addon-append">
+        <button class="btn btn-outline-secondary" type="button">
+            <mat-icon fontSet="material-icons-two-tone" (click)="onStatusClearClicked()">clear</mat-icon>
+        </button>
+    </div>
+</div>

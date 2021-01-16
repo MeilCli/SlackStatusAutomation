@@ -43,76 +43,21 @@
                     Edit
                 </button>
             </h4>
-            <ng-template #statusAutomationEmojiPicker>
-                <emoji-mart
-                    [custom]="customEmojis"
-                    (emojiClick)="onStatusAutomationEmojiClicked($event, i)"
-                    [isNative]="true"
-                ></emoji-mart>
-            </ng-template>
-            <div class="col input-group">
-                <ngx-emoji
-                    [emoji]="(statusAutomation.status.emoji | emoji) || ''"
-                    [size]="24"
-                    [isNative]="true"
-                ></ngx-emoji>
-                <button
-                    #popoverStatusAutomationEmoji="ngbPopover"
-                    class="btn btn-outline-secondary"
-                    type="Button"
-                    [autoClose]="'outside'"
-                    [ngbPopover]="statusAutomationEmojiPicker"
-                    triggers="manual"
-                    (click)="toggleStatusAutomationPopover(popoverStatusAutomationEmoji)"
-                    popoverTitle="Choose Emoji"
-                >
-                    Change Emoji
-                </button>
-                <div class="input-group-prepend">
-                    <span class="input-group-text" id="basic-addon-status-automation-message">Message</span>
-                </div>
-                <input
-                    type="text"
-                    class="form-control"
-                    aria-describedby="basic-addon-status-automation-message"
-                    (input)="onStatusAutomationChanged()"
-                    [(ngModel)]="statusAutomation.status.message"
-                />
-            </div>
+            <app-status
+                [account]="account"
+                [status]="statusAutomation.status"
+                (statusChanged)="onStatusAutomationStatusChanged($event, i)"
+            ></app-status>
         </li>
     </ul>
 
     <!-- DefaultStatus -->
-    <h3 class="mt-5">Default Status</h3>
-    <ng-template #defaultStatusEmojiPicker>
-        <emoji-mart
-            [custom]="customEmojis"
-            (emojiClick)="onDefaultStatusEmojiClicked($event)"
-            [isNative]="true"
-        ></emoji-mart>
-    </ng-template>
-    <div class="col input-group">
-        <ngx-emoji [emoji]="(defaultStatus.emoji | emoji) || ''" [size]="24" [isNative]="true"></ngx-emoji>
-        <button
-            class="btn btn-outline-secondary"
-            type="Button"
-            [autoClose]="'outside'"
-            [ngbPopover]="defaultStatusEmojiPicker"
-            popoverTitle="Choose Emoji"
-        >
-            Change Emoji
-        </button>
-        <div class="input-group-prepend">
-            <span class="input-group-text" id="basic-addon-default-status-message">Message</span>
-        </div>
-        <input
-            type="text"
-            class="form-control"
-            aria-describedby="basic-addon-default-status-message"
-            (input)="onDefaultStatusChanged()"
-            [(ngModel)]="defaultStatus.message"
-        />
-    </div>
+    <h3 class="mt-5">Default</h3>
+    <app-status
+        [account]="account"
+        [status]="defaultStatus"
+        (statusChanged)="onDefaultStatusChanged($event)"
+    ></app-status>
 
     <div class="mb-5"></div>
 </div>

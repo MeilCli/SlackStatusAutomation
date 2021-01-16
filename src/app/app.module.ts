@@ -19,6 +19,7 @@ import { HomeEditModalComponent } from "./components/home-edit-modal/home-edit-m
 import { AccountComponent } from "./components/account/account.component";
 import { LogComponent } from "./components/log/log.component";
 import { LicenseComponent } from "./components/license/license.component";
+import { StatusComponent } from "./components/status/status.component";
 
 @NgModule({
     declarations: [
@@ -34,6 +35,7 @@ import { LicenseComponent } from "./components/license/license.component";
         AccountComponent,
         LogComponent,
         LicenseComponent,
+        StatusComponent,
     ],
     imports: [BrowserModule, FormsModule, AppRoutingModule, NgbModule, MatIconModule, PickerModule, EmojiModule],
     providers: [],

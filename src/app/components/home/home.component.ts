@@ -31,8 +31,6 @@ interface CustomEmoji {
     styleUrls: ["./home.component.scss"],
 })
 export class HomeComponent {
-    private account: Account;
-
     private _automationEnabled = false;
     set automationEnabled(value: boolean) {
         this._automationEnabled = value;
@@ -55,9 +53,9 @@ export class HomeComponent {
         return this._intervalSeconds;
     }
 
+    public account: Account;
     public defaultStatus: Status;
     public statusAutomations: StatusAutomation[] = [];
-    public customEmojis: CustomEmoji[] = [];
 
     constructor(
         private readonly storeService: StoreService,
@@ -69,29 +67,12 @@ export class HomeComponent {
         this._intervalSeconds = this.account.intervalSeconds;
         this.statusAutomations = this.account.statusAutomations;
         this.defaultStatus = this.account.defaultStatus;
-        this.updateCustomEmojis();
     }
 
-    onDefaultStatusChanged() {
+    onDefaultStatusChanged(event: Status) {
+        this.defaultStatus = event;
         this.storeService.updateDefaultStatus(this.account.userId, this.account.teamId, this.defaultStatus);
         this.automationService.updateAccount();
-    }
-
-    onDefaultStatusEmojiClicked(event: EmojiEvent) {
-        const newDefaultStatus = this.defaultStatus;
-        const foundCustomEmoji = this.account.emojiList.find((x) => x.key == event.emoji.id);
-        newDefaultStatus.emoji =
-            foundCustomEmoji ?? ({ __typename: "Emoji", key: event.emoji.id, image: null } as Emoji);
-        this.defaultStatus = newDefaultStatus;
-        this.onDefaultStatusChanged();
-    }
-
-    toggleStatusAutomationPopover(popover: { isOpen: () => boolean; close: () => void; open: () => void }) {
-        if (popover.isOpen()) {
-            popover.close();
-        } else {
-            popover.open();
-        }
     }
 
     onStatusAutomationChanged() {
@@ -99,12 +80,8 @@ export class HomeComponent {
         this.automationService.updateAccount();
     }
 
-    onStatusAutomationEmojiClicked(event: EmojiEvent, index: number) {
-        const newStatusAutomations = this.statusAutomations;
-        const foundCustomEmoji = this.account.emojiList.find((x) => x.key == event.emoji.id);
-        newStatusAutomations[index].status.emoji =
-            foundCustomEmoji ?? ({ __typename: "Emoji", key: event.emoji.id, image: null } as Emoji);
-        this.statusAutomations = newStatusAutomations;
+    onStatusAutomationStatusChanged(event: Status, index: number) {
+        this.statusAutomations[index].status = event;
         this.onStatusAutomationChanged();
     }
 
@@ -140,34 +117,5 @@ export class HomeComponent {
         const result = (await modalRef.result) as ConditionGroup;
         this.statusAutomations[index].conditionGroup = result;
         this.onStatusAutomationChanged();
-    }
-
-    updateCustomEmojis() {
-        const newList: CustomEmoji[] = [];
-        for (const emoji of this.account.emojiList) {
-            if (emoji.__typename == "Emoji") {
-                newList.push({
-                    id: emoji.key,
-                    name: emoji.key,
-                    shortNames: [emoji.key],
-                    keywords: [emoji.key],
-                    text: "",
-                    emoticons: [],
-                    imageUrl: emoji.image ?? undefined,
-                });
-            }
-            if (emoji.__typename == "EmojiAlias") {
-                newList.push({
-                    id: emoji.key,
-                    name: emoji.key,
-                    shortNames: [emoji.key],
-                    keywords: [emoji.key],
-                    text: "",
-                    emoticons: [],
-                    imageUrl: emoji.ailias.image ?? undefined,
-                });
-            }
-        }
-        this.customEmojis = newList;
     }
 }
