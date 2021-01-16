@@ -15,6 +15,12 @@ export class LicenseComponent {
             licenseUrl: "https://github.com/angular/angular/blob/master/LICENSE",
         },
         {
+            name: "Official components for Angular",
+            url: "https://github.com/angular/components",
+            license: "MIT License",
+            licenseUrl: "https://github.com/angular/components/blob/master/LICENSE",
+        },
+        {
             name: "ngx-emoji-mart",
             url: "https://github.com/scttcper/ngx-emoji-mart",
             license: "MIT License",
