@@ -42,7 +42,10 @@
         </button>
     </h3>
     <ul class="list-group list-group-flush">
-        <li class="list-group-item" *ngFor="let statusAutomation of statusAutomations; index as i">
+        <li
+            class="list-group-item status-automation-list-item"
+            *ngFor="let statusAutomation of statusAutomations; index as i"
+        >
             <h4 class="mb-3">
                 {{ statusAutomation.conditionGroup.name
                 }}<button mat-icon-button class="mat-button float-right" (click)="openDeleteStatusAutomationModal(i)">
