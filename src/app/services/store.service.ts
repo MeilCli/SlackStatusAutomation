@@ -10,12 +10,14 @@ const defaultIntervalSeconds = 180;
 export class StoreService {
     private accountsKey = "tokens";
     // not for security, for obfuscation
-    private store = new Store<Record<string, Account[]>>({ encryptionKey: "SlackStatusAutomation" });
+    private accountStore = new Store<Record<string, Account[]>>({ encryptionKey: "SlackStatusAutomation" });
+    private languageKey = "language";
+    private languageStore = new Store<Record<string, string>>({ name: "language" });
 
     constructor() {}
 
     addAccount(token: string, userId: string, userName: string, teamId: string, teamName: string) {
-        const accounts = this.store.get(this.accountsKey, []);
+        const accounts = this.accountStore.get(this.accountsKey, []);
         const foundIndex = accounts.findIndex((x) => x.userId == userId && x.teamId == teamId);
         if (0 <= foundIndex) {
             accounts[foundIndex].token = token;
@@ -34,59 +36,67 @@ export class StoreService {
             });
         }
 
-        this.store.set(this.accountsKey, accounts);
+        this.accountStore.set(this.accountsKey, accounts);
     }
 
     clearAccounts() {
-        this.store.delete(this.accountsKey);
+        this.accountStore.delete(this.accountsKey);
     }
 
     getAccounts(): Account[] {
-        return this.store.get(this.accountsKey, []);
+        return this.accountStore.get(this.accountsKey, []);
     }
 
     updateIntervalSeconds(userId: string, teamId: string, intervalSeconds: number) {
-        const accounts = this.store.get(this.accountsKey, []);
+        const accounts = this.accountStore.get(this.accountsKey, []);
         const foundIndex = accounts.findIndex((x) => x.userId == userId && x.teamId == teamId);
         if (0 <= foundIndex) {
             accounts[foundIndex].intervalSeconds = intervalSeconds;
-            this.store.set(this.accountsKey, accounts);
+            this.accountStore.set(this.accountsKey, accounts);
         }
     }
 
     updateAutomationEnabled(userId: string, teamId: string, automationEnabled: boolean) {
-        const accounts = this.store.get(this.accountsKey, []);
+        const accounts = this.accountStore.get(this.accountsKey, []);
         const foundIndex = accounts.findIndex((x) => x.userId == userId && x.teamId == teamId);
         if (0 <= foundIndex) {
             accounts[foundIndex].automationEnabled = automationEnabled;
-            this.store.set(this.accountsKey, accounts);
+            this.accountStore.set(this.accountsKey, accounts);
         }
     }
 
     updateEmojiList(userId: string, teamId: string, emojiList: (Emoji | EmojiAlias)[]) {
-        const accounts = this.store.get(this.accountsKey, []);
+        const accounts = this.accountStore.get(this.accountsKey, []);
         const foundIndex = accounts.findIndex((x) => x.userId == userId && x.teamId == teamId);
         if (0 <= foundIndex) {
             accounts[foundIndex].emojiList = emojiList;
-            this.store.set(this.accountsKey, accounts);
+            this.accountStore.set(this.accountsKey, accounts);
         }
     }
 
     updateStatusAutomations(userId: string, teamId: string, statusAutomations: StatusAutomation[]) {
-        const accounts = this.store.get(this.accountsKey, []);
+        const accounts = this.accountStore.get(this.accountsKey, []);
         const foundIndex = accounts.findIndex((x) => x.userId == userId && x.teamId == teamId);
         if (0 <= foundIndex) {
             accounts[foundIndex].statusAutomations = statusAutomations;
-            this.store.set(this.accountsKey, accounts);
+            this.accountStore.set(this.accountsKey, accounts);
         }
     }
 
     updateDefaultStatus(userId: string, teamId: string, defaultStatus: Status) {
-        const accounts = this.store.get(this.accountsKey, []);
+        const accounts = this.accountStore.get(this.accountsKey, []);
         const foundIndex = accounts.findIndex((x) => x.userId == userId && x.teamId == teamId);
         if (0 <= foundIndex) {
             accounts[foundIndex].defaultStatus = defaultStatus;
-            this.store.set(this.accountsKey, accounts);
+            this.accountStore.set(this.accountsKey, accounts);
         }
+    }
+
+    getLanguage(): string {
+        return this.languageStore.get(this.languageKey, navigator.language);
+    }
+
+    setLanguage(value: string) {
+        this.languageStore.set(this.languageKey, value);
     }
 }

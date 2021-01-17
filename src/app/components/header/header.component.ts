@@ -1,5 +1,12 @@
-import { Component } from "@angular/core";
+import { Component, Input } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
+import { TranslateService } from "src/app/services/translate.service";
+import { HeaderTranslate } from "./header.translate";
+
+interface Link {
+    title: string;
+    path: string;
+}
 
 @Component({
     selector: "app-header",
@@ -7,17 +14,33 @@ import { ActivatedRoute } from "@angular/router";
     styleUrls: ["./header.component.scss"],
 })
 export class HeaderComponent {
-    public links = [
-        { title: "Home", path: "home" },
-        { title: "Emoji", path: "emoji" },
-        { title: "Account", path: "account" },
-        { title: "Log", path: "log" },
-        { title: "License", path: "license" },
-    ];
+    private _headerTranslate: HeaderTranslate;
+    @Input()
+    set headerTranslate(value: HeaderTranslate) {
+        this._headerTranslate = value;
+        this.createLink();
+    }
+    get headerTranslate(): HeaderTranslate {
+        return this._headerTranslate;
+    }
 
+    public links: Link[] = [];
     public activePath: string;
 
-    constructor(route: ActivatedRoute) {
+    constructor(route: ActivatedRoute, private readonly translateService: TranslateService) {
         this.activePath = route.snapshot.url.map((x) => x.path).join("/");
+        this._headerTranslate = this.translateService.getAppTranslate().headerTranslate;
+        this.createLink();
+    }
+
+    createLink() {
+        this.links = [
+            { title: this.headerTranslate.home, path: "home" },
+            { title: this.headerTranslate.emoji, path: "emoji" },
+            { title: this.headerTranslate.account, path: "account" },
+            { title: this.headerTranslate.language, path: "language" },
+            { title: this.headerTranslate.log, path: "log" },
+            { title: this.headerTranslate.license, path: "license" },
+        ];
     }
 }

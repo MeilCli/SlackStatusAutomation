@@ -5,6 +5,7 @@ import { HomeComponent } from "../components/home/home.component";
 import { OauthComponent } from "../components/oauth/oauth.component";
 import { EmojiComponent } from "../components/emoji/emoji.component";
 import { AccountComponent } from "../components/account/account.component";
+import { LanguageComponent } from "../components/language/language.component";
 import { LogComponent } from "../components/log/log.component";
 import { LicenseComponent } from "../components/license/license.component";
 
@@ -14,6 +15,7 @@ const routes: Routes = [
     { path: "oauth", component: OauthComponent },
     { path: "emoji", component: EmojiComponent },
     { path: "account", component: AccountComponent },
+    { path: "language", component: LanguageComponent },
     { path: "log", component: LogComponent },
     { path: "license", component: LicenseComponent },
 ];

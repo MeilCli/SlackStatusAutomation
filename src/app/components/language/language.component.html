@@ -1,0 +1,12 @@
+<app-header [headerTranslate]="headerTranslate"></app-header>
+<div class="container">
+    <h2>{{ languageTranslate.title }}</h2>
+    <div class="text-center">
+        <span *ngFor="let language of languages; index as i">
+            <span *ngIf="0 < i" class="ml-2"> </span>
+            <button type="button" class="btn btn-primary" (click)="onLanguageClicked(language.value)">
+                {{ language.name }}
+            </button>
+        </span>
+    </div>
+</div>

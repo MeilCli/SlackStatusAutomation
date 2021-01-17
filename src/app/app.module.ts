@@ -22,6 +22,7 @@ import { AccountComponent } from "./components/account/account.component";
 import { LogComponent } from "./components/log/log.component";
 import { LicenseComponent } from "./components/license/license.component";
 import { StatusComponent } from "./components/status/status.component";
+import { LanguageComponent } from "./components/language/language.component";
 
 @NgModule({
     declarations: [
@@ -38,6 +39,7 @@ import { StatusComponent } from "./components/status/status.component";
         LogComponent,
         LicenseComponent,
         StatusComponent,
+        LanguageComponent,
     ],
     imports: [
         BrowserModule,
