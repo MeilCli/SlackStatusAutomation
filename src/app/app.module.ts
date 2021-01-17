@@ -1,6 +1,8 @@
 import { BrowserModule } from "@angular/platform-browser";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { FormsModule } from "@angular/forms";
 import { NgModule } from "@angular/core";
+import { MatButtonModule } from "@angular/material/button";
 import { MatIconModule } from "@angular/material/icon";
 import { NgbModule } from "@ng-bootstrap/ng-bootstrap";
 import { PickerModule } from "@ctrl/ngx-emoji-mart";
@@ -37,7 +39,17 @@ import { StatusComponent } from "./components/status/status.component";
         LicenseComponent,
         StatusComponent,
     ],
-    imports: [BrowserModule, FormsModule, AppRoutingModule, NgbModule, MatIconModule, PickerModule, EmojiModule],
+    imports: [
+        BrowserModule,
+        BrowserAnimationsModule,
+        FormsModule,
+        AppRoutingModule,
+        NgbModule,
+        MatButtonModule,
+        MatIconModule,
+        PickerModule,
+        EmojiModule,
+    ],
     providers: [],
     bootstrap: [AppComponent],
 })

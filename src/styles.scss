@@ -2,3 +2,9 @@
 .popover {
     max-width: 400px !important;
 }
+
+@import "@angular/material/prebuilt-themes/deeppurple-amber.css";
+
+.mat-button:focus {
+    outline: none;
+}
