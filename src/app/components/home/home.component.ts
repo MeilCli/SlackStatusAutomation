@@ -4,12 +4,10 @@ import {
     Account,
     Status,
     StatusAutomation,
-    Emoji,
     ConditionGroup,
     EditableConditionGroup,
     EditableCondition,
 } from "../../entities";
-import { EmojiEvent } from "@ctrl/ngx-emoji-mart/ngx-emoji";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { HomeAddModalComponent } from "../home-add-modal/home-add-modal.component";
 import { HomeEditModalComponent } from "../home-edit-modal/home-edit-modal.component";
@@ -17,16 +15,6 @@ import { AutomationService } from "src/app/services/automation.service";
 import { HomeTranslate } from "./home.translate";
 import { TranslateService } from "src/app/services/translate.service";
 import { HomeDeleteModalComponent } from "../home-delete-modal/home-delete-modal.component";
-
-interface CustomEmoji {
-    id: string;
-    name: string;
-    shortNames: string[];
-    text: "";
-    emoticons: [];
-    keywords: string[];
-    imageUrl: string | undefined;
-}
 
 @Component({
     selector: "app-home",
