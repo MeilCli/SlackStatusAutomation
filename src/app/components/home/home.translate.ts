@@ -10,4 +10,5 @@ export interface HomeTranslate {
     automationTitle: string;
     automationHelp: string;
     defaultStatusTitle: string;
+    defaultStatusHelp: string;
 }

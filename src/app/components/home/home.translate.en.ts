@@ -10,4 +10,5 @@ export const enHomeTranslate: HomeTranslate = {
     automationHelp:
         "If matching automation condition, change slack status. If multiple automation matched, The one at the top has priority.",
     defaultStatusTitle: "Default",
+    defaultStatusHelp: "If not matching automation condition, change slack status",
 };

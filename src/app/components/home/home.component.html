@@ -64,7 +64,17 @@
     </ul>
 
     <!-- DefaultStatus -->
-    <h3 class="mt-5">{{ homeTranslate.defaultStatusTitle }}</h3>
+    <h3 class="mt-5">
+        {{ homeTranslate.defaultStatusTitle
+        }}<button
+            mat-icon-button
+            class="mat-button float-right"
+            [autoClose]="'outside'"
+            [ngbPopover]="homeTranslate.defaultStatusHelp"
+        >
+            <mat-icon fontSet="material-icons-two-tone">help</mat-icon>
+        </button>
+    </h3>
     <app-status
         [account]="account"
         [status]="defaultStatus"
