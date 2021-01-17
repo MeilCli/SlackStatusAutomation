@@ -1,4 +1,4 @@
-import { app, BrowserWindow, screen, ipcMain, powerMonitor } from "electron";
+import { app, BrowserWindow, screen, ipcMain, powerMonitor, Menu } from "electron";
 import * as express from "express";
 import { menubar } from "menubar";
 import { Server } from "http";
@@ -75,6 +75,8 @@ try {
             logger.log("pc is resumed");
             automation.resume();
         });
+
+        Menu.setApplicationMenu(null);
     });
 
     mb.on("ready", () => {
