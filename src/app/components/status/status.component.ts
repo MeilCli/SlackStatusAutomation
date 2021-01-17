@@ -1,6 +1,8 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { EmojiEvent } from "@ctrl/ngx-emoji-mart/ngx-emoji";
 import { Account, Emoji, Status } from "src/app/entities";
+import { TranslateService } from "src/app/services/translate.service";
+import { StatusTranslate } from "./status.translate";
 
 interface CustomEmoji {
     id: string;
@@ -37,8 +39,11 @@ export class StatusComponent {
     statusChanged = new EventEmitter<Status>();
 
     public customEmojis: CustomEmoji[] = [];
+    public statusTranslate: StatusTranslate;
 
-    constructor() {}
+    constructor(private readonly translateService: TranslateService) {
+        this.statusTranslate = translateService.getAppTranslate().statusTranslate;
+    }
 
     toggleStatusEmojiPopover(popover: { isOpen: () => boolean; close: () => void; open: () => void }) {
         if (popover.isOpen()) {
