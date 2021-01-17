@@ -28,29 +28,25 @@
 
     <!-- StatusAutomations -->
     <h3 class="mt-5">
-        {{ homeTranslate.automationTitle }}
-        <button mat-icon-button class="mat-button float-right" (click)="openAddStatusAutomationModal()">
-            <mat-icon fontSet="material-icons-two-tone">add</mat-icon>
-        </button>
-        <button
+        {{ homeTranslate.automationTitle
+        }}<button
             mat-icon-button
-            class="mat-button float-right"
+            class="mat-button"
             [autoClose]="'outside'"
             [ngbPopover]="homeTranslate.automationHelp"
         >
             <mat-icon fontSet="material-icons-two-tone">help</mat-icon>
+        </button>
+        <button mat-icon-button class="mat-button float-right" (click)="openAddStatusAutomationModal()">
+            <mat-icon fontSet="material-icons-two-tone">add</mat-icon>
         </button>
     </h3>
     <ul class="list-group list-group-flush">
         <li class="list-group-item" *ngFor="let statusAutomation of statusAutomations; index as i">
             <h4 class="mb-3">
                 {{ statusAutomation.conditionGroup.name
-                }}<button
-                    type="button"
-                    class="btn btn-danger float-right ml-2"
-                    (click)="onStatusAutomationRemoveClicked(i)"
-                >
-                    Delete</button
+                }}<button mat-icon-button class="mat-button float-right" (click)="openDeleteStatusAutomationModal(i)">
+                    <mat-icon fontSet="material-icons-two-tone">delete</mat-icon></button
                 ><button mat-icon-button class="mat-button float-right" (click)="openEditStatusAutomationModal(i)">
                     <mat-icon fontSet="material-icons-two-tone">edit</mat-icon>
                 </button>
@@ -68,7 +64,7 @@
         {{ homeTranslate.defaultStatusTitle
         }}<button
             mat-icon-button
-            class="mat-button float-right"
+            class="mat-button"
             [autoClose]="'outside'"
             [ngbPopover]="homeTranslate.defaultStatusHelp"
         >

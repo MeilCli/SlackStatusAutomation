@@ -23,6 +23,7 @@ import { LogComponent } from "./components/log/log.component";
 import { LicenseComponent } from "./components/license/license.component";
 import { StatusComponent } from "./components/status/status.component";
 import { LanguageComponent } from "./components/language/language.component";
+import { HomeDeleteModalComponent } from "./components/home-delete-modal/home-delete-modal.component";
 
 @NgModule({
     declarations: [
@@ -40,6 +41,7 @@ import { LanguageComponent } from "./components/language/language.component";
         LicenseComponent,
         StatusComponent,
         LanguageComponent,
+        HomeDeleteModalComponent,
     ],
     imports: [
         BrowserModule,

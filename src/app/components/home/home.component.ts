@@ -16,6 +16,7 @@ import { HomeEditModalComponent } from "../home-edit-modal/home-edit-modal.compo
 import { AutomationService } from "src/app/services/automation.service";
 import { HomeTranslate } from "./home.translate";
 import { TranslateService } from "src/app/services/translate.service";
+import { HomeDeleteModalComponent } from "../home-delete-modal/home-delete-modal.component";
 
 interface CustomEmoji {
     id: string;
@@ -121,6 +122,25 @@ export class HomeComponent {
         (modalRef.componentInstance as HomeEditModalComponent).editableConditionGroup = editableConditionGroup;
         const result = (await modalRef.result) as ConditionGroup;
         this.statusAutomations[index].conditionGroup = result;
+        this.onStatusAutomationChanged();
+    }
+
+    async openDeleteStatusAutomationModal(index: number) {
+        const conditionGroup = this.statusAutomations[index].conditionGroup;
+        const editableConditionGroup: EditableConditionGroup = {
+            name: conditionGroup.name,
+            conditions: conditionGroup.conditions.map((x) => {
+                if (x.__typename == "IpCondition") {
+                    return { type: "Ip", value: x.ip } as EditableCondition;
+                } else {
+                    return { type: "Wifi", value: x.wifi } as EditableCondition;
+                }
+            }),
+        };
+        const modalRef = this.modalService.open(HomeDeleteModalComponent);
+        (modalRef.componentInstance as HomeDeleteModalComponent).editableConditionGroup = editableConditionGroup;
+        await modalRef.result;
+        this.statusAutomations = this.statusAutomations.filter((_, i) => index != i);
         this.onStatusAutomationChanged();
     }
 }
