@@ -1,9 +1,9 @@
 import { app, BrowserWindow, screen, ipcMain } from "electron";
-import * as path from "path";
-import * as url from "url";
 import * as express from "express";
 import { menubar } from "menubar";
 import { Server } from "http";
+import { Logger } from "./logger";
+import { Automation } from "./automation";
 
 let win: BrowserWindow | null = null;
 let server: Server | null = null;
@@ -115,4 +115,9 @@ try {
     ipcMain.on("oauthEnd", () => {
         server?.close();
     });
+
+    const logger = new Logger();
+    const automation = new Automation(logger);
+    logger.start();
+    automation.start();
 } catch (e) {}

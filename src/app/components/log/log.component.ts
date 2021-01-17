@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, NgZone } from "@angular/core";
 import { Subscription } from "rxjs";
-import { AutomationService } from "src/app/services/automation.service";
+import { LoggerService } from "src/app/services/logger.service";
 
 @Component({
     selector: "app-log",
@@ -12,11 +12,11 @@ export class LogComponent implements OnInit, OnDestroy {
 
     public logs: string[] = [];
 
-    constructor(private readonly automationService: AutomationService, private readonly zone: NgZone) {}
+    constructor(private readonly loggerService: LoggerService, private readonly zone: NgZone) {}
 
-    ngOnInit() {
-        this.logs = this.automationService.getLogs();
-        this.logSubscription = this.automationService.getLogObservable().subscribe((log) => {
+    async ngOnInit() {
+        this.logs = await this.loggerService.getLogs();
+        this.logSubscription = this.loggerService.getLogObservable().subscribe((log) => {
             this.zone.run(() => {
                 this.logs.push(log);
             });

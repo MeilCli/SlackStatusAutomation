@@ -1,5 +1,13 @@
 {
     "extends": "./tsconfig.json",
-    "include": ["src/**/*.ts", "__test__/**/*.test.ts", "e2e/**/*.ts", "e2e/**/*.ts", "main.ts"],
+    "include": [
+        "src/**/*.ts",
+        "__test__/**/*.test.ts",
+        "e2e/**/*.ts",
+        "e2e/**/*.ts",
+        "main.ts",
+        "logger.ts",
+        "automation.ts"
+    ],
     "exclude": ["node_modules"]
 }

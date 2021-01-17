@@ -47,4 +47,12 @@ Thumbs.db
 
 main.js
 main.js.map
+logger.js
+logger.js.map
+automation.js
+automation.js.map
+/src/app/slack.js
+/src/app/slack.js.map
+/src/app/entities/**/*.js
+/src/app/entities/**/*.js.map
 release
