@@ -34,6 +34,18 @@ export class Automation {
             }
         });
     }
+
+    pause() {
+        for (const timer of this.timers) {
+            timer.pause();
+        }
+    }
+
+    resume() {
+        for (const timer of this.timers) {
+            timer.resume();
+        }
+    }
 }
 
 class AccountTimer {
@@ -81,6 +93,31 @@ class AccountTimer {
                 this.applicationLog("stop unknown timer");
             }
             this.timerId = null;
+        }
+    }
+
+    pause() {
+        if (this.timerId != null) {
+            clearInterval(this.timerId);
+            if (this.cachedAccount != null) {
+                this.accountLog("pause timer", this.cachedAccount);
+            } else {
+                this.applicationLog("pause unknown timer");
+            }
+            this.timerId = null;
+        }
+    }
+
+    resume() {
+        const account = this.cachedAccount;
+        if (account == null) {
+            return;
+        }
+        if (account.automationEnabled) {
+            this.timerId = setInterval(() => {
+                this.handle(account);
+            }, account.intervalSeconds * 1000);
+            this.accountLog("resume timer", account);
         }
     }
 

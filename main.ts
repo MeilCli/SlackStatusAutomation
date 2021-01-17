@@ -1,4 +1,4 @@
-import { app, BrowserWindow, screen, ipcMain } from "electron";
+import { app, BrowserWindow, screen, ipcMain, powerMonitor } from "electron";
 import * as express from "express";
 import { menubar } from "menubar";
 import { Server } from "http";
@@ -56,12 +56,26 @@ function createWindow(): BrowserWindow {
 }
 
 try {
+    const logger = new Logger();
+    const automation = new Automation(logger);
+
     // This method will be called when Electron has finished
     // initialization and is ready to create browser windows.
     // Some APIs can only be used after this event occurs.
     // Added 400 ms to fix the black background issue while using transparent window.
     // More detais at https://github.com/electron/electron/issues/15947
-    app.on("ready", () => setTimeout(createWindow, 400));
+    app.on("ready", () => {
+        setTimeout(createWindow, 400);
+
+        powerMonitor.on("suspend", () => {
+            logger.log("pc is suspended");
+            automation.pause();
+        });
+        powerMonitor.on("resume", () => {
+            logger.log("pc is resumed");
+            automation.resume();
+        });
+    });
 
     mb.on("ready", () => {
         console.log("mb.ready\n");
@@ -116,8 +130,6 @@ try {
         server?.close();
     });
 
-    const logger = new Logger();
-    const automation = new Automation(logger);
     logger.start();
     automation.start();
 } catch (e) {}
