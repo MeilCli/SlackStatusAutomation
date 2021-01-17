@@ -7,7 +7,7 @@
 <div class="modal-body">
     <form>
         <div class="form-group">
-            <label for="conditionName">Name</label>
+            <div class="mt-2 mb-2"><label for="conditionName">Name</label></div>
             <div class="input-group">
                 <input
                     id="conditionName"
@@ -18,22 +18,38 @@
                     [ngModelOptions]="{ standalone: true }"
                 />
             </div>
-            <label>Conditions</label>
+            <div class="mt-2 mb-2">
+                <label>Conditions</label
+                ><button mat-icon-button class="mat-button float-right" (click)="addEditableCondition()">
+                    <mat-icon fontSet="material-icons-two-tone">add</mat-icon>
+                </button>
+            </div>
             <div class="input-group mb-2" *ngFor="let condition of editableConditionGroup.conditions; index as i">
-                <select class="form-control" [(ngModel)]="condition.type" [ngModelOptions]="{ standalone: true }">
-                    <option selected>Ip</option>
-                    <option>Wifi</option>
+                <select
+                    class="form-control"
+                    [(ngModel)]="condition.type"
+                    [ngModelOptions]="{ standalone: true }"
+                    [style.max-width]="100"
+                >
+                    <option ngValue="Ip" selected>IP</option>
+                    <option ngValue="Wifi">Wi-Fi</option>
                 </select>
                 <input
                     class="form-control"
-                    [placeholder]="condition.type == 'Ip' ? 'IP Address' : 'Wifi SSID'"
+                    [placeholder]="condition.type == 'Ip' ? 'IP Address' : 'Wi-Fi SSID'"
                     type="text"
                     [(ngModel)]="condition.value"
                     [ngModelOptions]="{ standalone: true }"
+                    aria-describedby="addon-append"
                 />
-                <button type="button" class="btn btn-danger" (click)="removeEditableCondition(i)">Remove</button>
+                <div class="input-group-append" id="addon-append">
+                    <button class="btn btn-outline-danger" type="button">
+                        <mat-icon fontSet="material-icons-two-tone" (click)="removeEditableCondition(i)"
+                            >clear</mat-icon
+                        >
+                    </button>
+                </div>
             </div>
-            <button type="button" class="btn btn-primary" (click)="addEditableCondition()">Add condition</button>
         </div>
     </form>
 </div>
