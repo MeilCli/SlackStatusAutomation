@@ -14,6 +14,8 @@ import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { HomeAddModalComponent } from "../home-add-modal/home-add-modal.component";
 import { HomeEditModalComponent } from "../home-edit-modal/home-edit-modal.component";
 import { AutomationService } from "src/app/services/automation.service";
+import { HomeTranslate } from "./home.translate";
+import { TranslateService } from "src/app/services/translate.service";
 
 interface CustomEmoji {
     id: string;
@@ -56,10 +58,12 @@ export class HomeComponent {
     public account: Account;
     public defaultStatus: Status;
     public statusAutomations: StatusAutomation[] = [];
+    public homeTranslate: HomeTranslate;
 
     constructor(
         private readonly storeService: StoreService,
         private readonly automationService: AutomationService,
+        private readonly translateService: TranslateService,
         private readonly modalService: NgbModal
     ) {
         this.account = storeService.getAccounts()[0];
@@ -67,6 +71,7 @@ export class HomeComponent {
         this._intervalSeconds = this.account.intervalSeconds;
         this.statusAutomations = this.account.statusAutomations;
         this.defaultStatus = this.account.defaultStatus;
+        this.homeTranslate = this.translateService.getAppTranslate().homeTranslate;
     }
 
     onDefaultStatusChanged(event: Status) {

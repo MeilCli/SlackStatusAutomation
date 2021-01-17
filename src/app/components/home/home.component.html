@@ -1,15 +1,19 @@
 <app-header></app-header>
 <div class="container">
-    <h2>Home</h2>
-    <p>Automation: {{ automationEnabled ? "On" : "Off" }}</p>
+    <h2>{{ homeTranslate.title }}</h2>
+    <p>{{ homeTranslate.automationState(automationEnabled) }}</p>
     <div class="row">
         <div class="col btn-group btn-group-toggle" ngbRadioGroup name="radioBasic" [(ngModel)]="automationEnabled">
-            <label ngbButtonLabel class="btn-primary"> <input ngbButton type="radio" [value]="true" /> On </label>
-            <label ngbButtonLabel class="btn-light"> <input ngbButton type="radio" [value]="false" /> Off </label>
+            <label ngbButtonLabel class="btn-primary">
+                <input ngbButton type="radio" [value]="true" />{{ homeTranslate.on }}</label
+            >
+            <label ngbButtonLabel class="btn-light">
+                <input ngbButton type="radio" [value]="false" />{{ homeTranslate.off }}</label
+            >
         </div>
         <div class="col input-group">
             <div class="input-group-prepend">
-                <span class="input-group-text" id="basic-addon1">Interval Seconds</span>
+                <span class="input-group-text" id="basic-addon1">{{ homeTranslate.intervalSeconds }}</span>
             </div>
             <input
                 type="number"
@@ -24,7 +28,7 @@
 
     <!-- StatusAutomations -->
     <h3 class="mt-5">
-        Automations
+        {{ homeTranslate.automationTitle }}
         <button mat-icon-button class="mat-button float-right" (click)="openAddStatusAutomationModal()">
             <mat-icon fontSet="material-icons-two-tone">add</mat-icon>
         </button>
@@ -32,7 +36,7 @@
             mat-icon-button
             class="mat-button float-right"
             [autoClose]="'outside'"
-            ngbPopover="If matching automation condition, change slack status. If multiple automation matched, The one at the top has priority."
+            [ngbPopover]="homeTranslate.automationHelp"
         >
             <mat-icon fontSet="material-icons-two-tone">help</mat-icon>
         </button>
@@ -60,7 +64,7 @@
     </ul>
 
     <!-- DefaultStatus -->
-    <h3 class="mt-5">Default</h3>
+    <h3 class="mt-5">{{ homeTranslate.defaultStatusTitle }}</h3>
     <app-status
         [account]="account"
         [status]="defaultStatus"
