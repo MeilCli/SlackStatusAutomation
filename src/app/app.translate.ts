@@ -19,6 +19,7 @@ import { LanguageTranslate, enLanguageTranslate, jaLanguageTranslate } from "./c
 import { HeaderTranslate, enHeaderTranslate, jaHeaderTranslate } from "./components/header/header.translate";
 import { EmojiTranslate, enEmojiTranslate, jaEmojiTranslate } from "./components/emoji/emoji.translate";
 import { LogTranslate, enLogTranslate, jaLogTranslate } from "./components/log/log.translate";
+import { AboutTranslate, enAboutTranslate, jaAboutTanslate } from "./components/about/about.translate";
 
 export interface AppTranslate {
     homeTranslate: HomeTranslate;
@@ -30,6 +31,7 @@ export interface AppTranslate {
     headerTranslate: HeaderTranslate;
     emojiTranslate: EmojiTranslate;
     logTranslate: LogTranslate;
+    aboutTranslate: AboutTranslate;
 }
 
 export const enAppTranslate: AppTranslate = {
@@ -42,6 +44,7 @@ export const enAppTranslate: AppTranslate = {
     headerTranslate: enHeaderTranslate,
     emojiTranslate: enEmojiTranslate,
     logTranslate: enLogTranslate,
+    aboutTranslate: enAboutTranslate,
 };
 export const jaAppTranslate: AppTranslate = {
     homeTranslate: jaHomeTranslate,
@@ -53,4 +56,5 @@ export const jaAppTranslate: AppTranslate = {
     headerTranslate: jaHeaderTranslate,
     emojiTranslate: jaEmojiTranslate,
     logTranslate: jaLogTranslate,
+    aboutTranslate: jaAboutTanslate,
 };

@@ -1,20 +1,19 @@
 <app-header></app-header>
 <div class="container">
-    <h2>About SlackStatusAutomation</h2>
+    <h2>{{ aboutTranslate.title }}</h2>
     <p>
-        The original SlackStatusAutomation is published at
-        <a href="javascript:void(0)" (click)="openExternalBrowser('https://github.com/MeilCli/SlackStatusAutomation')"
+        {{ aboutTranslate.slackStatusAutomationLinkPreText
+        }}<a href="javascript:void(0)" (click)="openExternalBrowser('https://github.com/MeilCli/SlackStatusAutomation')"
             >https://github.com/MeilCli/SlackStatusAutomation</a
-        >
-        and licensed by MIT License.
+        >{{ aboutTranslate.slackStatusAutomationLinkPostText }}
     </p>
 
-    <h3>Using Open Source Software</h3>
+    <h3>{{ aboutTranslate.usingOpenSourceSoftware }}</h3>
     <table class="table table-striped">
         <thead>
             <tr>
-                <th scope="col">Library</th>
-                <th scope="col">License</th>
+                <th scope="col">{{ aboutTranslate.openSourceSoftware }}</th>
+                <th scope="col">{{ aboutTranslate.license }}</th>
             </tr>
         </thead>
         <tbody>

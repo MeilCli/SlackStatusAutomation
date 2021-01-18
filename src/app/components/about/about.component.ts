@@ -1,5 +1,7 @@
 import { Component } from "@angular/core";
 import { shell } from "electron";
+import { TranslateService } from "src/app/services/translate.service";
+import { AboutTranslate } from "./about.translate";
 
 @Component({
     selector: "app-about",
@@ -100,6 +102,11 @@ export class AboutComponent {
         },
         // zone.js is same library to angular
     ];
+    public aboutTranslate: AboutTranslate;
+
+    constructor(private readonly translateService: TranslateService) {
+        this.aboutTranslate = this.translateService.getAppTranslate().aboutTranslate;
+    }
 
     openExternalBrowser(url: string) {
         shell.openExternal(url);
