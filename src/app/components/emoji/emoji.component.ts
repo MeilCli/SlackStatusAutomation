@@ -1,7 +1,9 @@
 import { Component } from "@angular/core";
 import { StoreService } from "src/app/services/store.service";
+import { TranslateService } from "src/app/services/translate.service";
 import { Account, Emoji, EmojiAlias } from "../../entities";
 import { createSlackClient, EmojiListResult } from "../../slack";
+import { EmojiTranslate } from "./emoji.translate";
 
 interface CustomEmoji {
     id: string;
@@ -23,10 +25,12 @@ export class EmojiComponent {
 
     public syncMessage = "";
     public customEmojis: CustomEmoji[] = [];
+    public emojiTranslate: EmojiTranslate;
 
-    constructor(private storeService: StoreService) {
+    constructor(private readonly storeService: StoreService, private readonly translateService: TranslateService) {
         this.account = storeService.getAccounts()[0];
         this.updateCustomEmojis();
+        this.emojiTranslate = this.translateService.getAppTranslate().emojiTranslate;
     }
 
     async onclickSyncCustomEmoji() {
@@ -54,7 +58,7 @@ export class EmojiComponent {
         }
         this.account.emojiList = result;
         this.storeService.updateEmojiList(this.account.userId, this.account.teamId, result);
-        this.syncMessage = `custom emoji synced: ${result.length}`;
+        this.syncMessage = this.emojiTranslate.scynedCustomEmoji(result.length);
         this.updateCustomEmojis();
     }
 

@@ -1,11 +1,13 @@
 <app-header></app-header>
 <div class="container">
-    <h2>Emoji</h2>
+    <h2>{{ emojiTranslate.title }}</h2>
     <div class="text-center">
-        <button type="button" class="btn btn-primary mt-2" (click)="onclickSyncCustomEmoji()">Sync custom emoji</button>
+        <button type="button" class="btn btn-primary mt-2" (click)="onclickSyncCustomEmoji()">
+            {{ emojiTranslate.syncCustomEmoji }}
+        </button>
         <p>{{ syncMessage }}</p>
     </div>
-    <h3>Useful Emoji</h3>
+    <h3>{{ emojiTranslate.usefulEmoji }}</h3>
     <div class="text-center">
         <emoji-mart [custom]="customEmojis" [isNative]="true"></emoji-mart>
     </div>
