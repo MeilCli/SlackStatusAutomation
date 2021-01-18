@@ -1,6 +1,8 @@
 import { Component, OnInit, OnDestroy, NgZone } from "@angular/core";
 import { Subscription } from "rxjs";
 import { LoggerService } from "src/app/services/logger.service";
+import { TranslateService } from "src/app/services/translate.service";
+import { LogTranslate } from "./log.translate";
 
 @Component({
     selector: "app-log",
@@ -11,8 +13,15 @@ export class LogComponent implements OnInit, OnDestroy {
     private logSubscription: Subscription | null = null;
 
     public logs: string[] = [];
+    public logTranslate: LogTranslate;
 
-    constructor(private readonly loggerService: LoggerService, private readonly zone: NgZone) {}
+    constructor(
+        private readonly loggerService: LoggerService,
+        private readonly translateService: TranslateService,
+        private readonly zone: NgZone
+    ) {
+        this.logTranslate = this.translateService.getAppTranslate().logTranslate;
+    }
 
     async ngOnInit() {
         this.logs = await this.loggerService.getLogs();
