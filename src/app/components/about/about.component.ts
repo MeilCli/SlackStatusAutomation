@@ -2,11 +2,11 @@ import { Component } from "@angular/core";
 import { shell } from "electron";
 
 @Component({
-    selector: "app-license",
-    templateUrl: "./license.component.html",
-    styleUrls: ["./license.component.scss"],
+    selector: "app-about",
+    templateUrl: "./about.component.html",
+    styleUrls: ["./about.component.scss"],
 })
-export class LicenseComponent {
+export class AboutComponent {
     public libraries = [
         {
             name: "Angular",
@@ -55,6 +55,12 @@ export class LicenseComponent {
             url: "https://github.com/sindresorhus/electron-store",
             license: "MIT License",
             licenseUrl: "https://github.com/sindresorhus/electron-store/blob/master/license",
+        },
+        {
+            name: "electron-builder",
+            url: "https://github.com/electron-userland/electron-builder",
+            license: "MIT License",
+            licenseUrl: "https://github.com/electron-userland/electron-builder/blob/master/LICENSE",
         },
         {
             name: "express",

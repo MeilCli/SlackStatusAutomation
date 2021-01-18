@@ -6,6 +6,7 @@ export interface HeaderTranslate {
     emoji: string;
     account: string;
     language: string;
+    other: string;
     log: string;
-    license: string;
+    about: string;
 }

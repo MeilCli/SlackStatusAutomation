@@ -5,6 +5,7 @@ export const enHeaderTranslate: HeaderTranslate = {
     emoji: "Emoji",
     account: "Account",
     language: "Language",
+    other: "Other",
     log: "Log",
-    license: "License",
+    about: "About SlackStatusAutomation",
 };

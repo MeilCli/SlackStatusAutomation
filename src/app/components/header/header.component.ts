@@ -25,6 +25,7 @@ export class HeaderComponent {
     }
 
     public links: Link[] = [];
+    public otherLinks: Link[] = [];
     public activePath: string;
 
     constructor(route: ActivatedRoute, private readonly translateService: TranslateService) {
@@ -39,8 +40,10 @@ export class HeaderComponent {
             { title: this.headerTranslate.emoji, path: "emoji" },
             { title: this.headerTranslate.account, path: "account" },
             { title: this.headerTranslate.language, path: "language" },
+        ];
+        this.otherLinks = [
             { title: this.headerTranslate.log, path: "log" },
-            { title: this.headerTranslate.license, path: "license" },
+            { title: this.headerTranslate.about, path: "about" },
         ];
     }
 }

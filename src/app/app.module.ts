@@ -20,7 +20,7 @@ import { HomeAddModalComponent } from "./components/home-add-modal/home-add-moda
 import { HomeEditModalComponent } from "./components/home-edit-modal/home-edit-modal.component";
 import { AccountComponent } from "./components/account/account.component";
 import { LogComponent } from "./components/log/log.component";
-import { LicenseComponent } from "./components/license/license.component";
+import { AboutComponent } from "./components/about/about.component";
 import { StatusComponent } from "./components/status/status.component";
 import { LanguageComponent } from "./components/language/language.component";
 import { HomeDeleteModalComponent } from "./components/home-delete-modal/home-delete-modal.component";
@@ -38,7 +38,7 @@ import { HomeDeleteModalComponent } from "./components/home-delete-modal/home-de
         HomeEditModalComponent,
         AccountComponent,
         LogComponent,
-        LicenseComponent,
+        AboutComponent,
         StatusComponent,
         LanguageComponent,
         HomeDeleteModalComponent,

@@ -1,0 +1,33 @@
+<app-header></app-header>
+<div class="container">
+    <h2>About SlackStatusAutomation</h2>
+    <p>
+        The original SlackStatusAutomation is published at
+        <a href="javascript:void(0)" (click)="openExternalBrowser('https://github.com/MeilCli/SlackStatusAutomation')"
+            >https://github.com/MeilCli/SlackStatusAutomation</a
+        >
+        and licensed by MIT License.
+    </p>
+
+    <h3>Using Open Source Software</h3>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Library</th>
+                <th scope="col">License</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let library of libraries">
+                <td>
+                    <a href="javascript:void(0)" (click)="openExternalBrowser(library.url)">{{ library.name }}</a>
+                </td>
+                <td>
+                    <a href="javascript:void(0)" (click)="openExternalBrowser(library.licenseUrl)">{{
+                        library.license
+                    }}</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

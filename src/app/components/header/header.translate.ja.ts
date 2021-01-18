@@ -5,6 +5,7 @@ export const jaHeaderTranslate: HeaderTranslate = {
     emoji: "絵文字",
     account: "アカウント",
     language: "言語",
+    other: "その他",
     log: "ログ",
-    license: "ライセンス",
+    about: "SlackStatusAutomationについて",
 };

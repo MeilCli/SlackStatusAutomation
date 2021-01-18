@@ -7,7 +7,7 @@ import { EmojiComponent } from "../components/emoji/emoji.component";
 import { AccountComponent } from "../components/account/account.component";
 import { LanguageComponent } from "../components/language/language.component";
 import { LogComponent } from "../components/log/log.component";
-import { LicenseComponent } from "../components/license/license.component";
+import { AboutComponent } from "../components/about/about.component";
 
 const routes: Routes = [
     { path: "", component: IndexComponent },
@@ -17,7 +17,7 @@ const routes: Routes = [
     { path: "account", component: AccountComponent },
     { path: "language", component: LanguageComponent },
     { path: "log", component: LogComponent },
-    { path: "license", component: LicenseComponent },
+    { path: "about", component: AboutComponent },
 ];
 
 @NgModule({
