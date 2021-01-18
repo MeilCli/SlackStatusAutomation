@@ -1,5 +1,5 @@
 <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title">Edit Automation</h4>
+    <h4 class="modal-title" id="modal-basic-title">{{ homeEditModalTranslate.title }}</h4>
     <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
         <span aria-hidden="true">&times;</span>
     </button>
@@ -7,19 +7,21 @@
 <div class="modal-body">
     <form>
         <div class="form-group">
-            <div class="mt-2 mb-2"><label for="conditionName">Name</label></div>
+            <div class="mt-2 mb-2">
+                <label for="conditionName">{{ homeEditModalTranslate.labelName }}</label>
+            </div>
             <div class="input-group">
                 <input
                     id="conditionName"
                     class="form-control"
-                    placeholder="Automation name"
+                    [placeholder]="homeEditModalTranslate.namePlaceholder"
                     type="text"
                     [(ngModel)]="editableConditionGroup.name"
                     [ngModelOptions]="{ standalone: true }"
                 />
             </div>
             <div class="mt-2 mb-2">
-                <label>Conditions</label
+                <label>{{ homeEditModalTranslate.labelConditions }}</label
                 ><button mat-icon-button class="mat-button float-right" (click)="addEditableCondition()">
                     <mat-icon fontSet="material-icons-two-tone">add</mat-icon>
                 </button>
@@ -36,7 +38,9 @@
                 </select>
                 <input
                     class="form-control"
-                    [placeholder]="condition.type == 'Ip' ? 'IP Address' : 'Wi-Fi SSID'"
+                    [placeholder]="
+                        condition.type == 'Ip' ? homeEditModalTranslate.ipAddress : homeEditModalTranslate.wifiSsid
+                    "
                     type="text"
                     [(ngModel)]="condition.value"
                     [ngModelOptions]="{ standalone: true }"
@@ -54,5 +58,7 @@
     </form>
 </div>
 <div class="modal-footer">
-    <button type="button" class="btn btn-outline-dark" (click)="activeModal.close(result())">Save</button>
+    <button type="button" class="btn btn-outline-dark" (click)="activeModal.close(result())">
+        {{ homeEditModalTranslate.save }}
+    </button>
 </div>
