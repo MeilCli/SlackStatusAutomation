@@ -1,6 +1,8 @@
 import { Component } from "@angular/core";
 import { NgbActiveModal } from "@ng-bootstrap/ng-bootstrap";
+import { TranslateService } from "src/app/services/translate.service";
 import { EditableConditionGroup, ConditionGroup, IpCondition, WifiCondition } from "../../entities";
+import { HomeAddModalTranslate } from "./home-add-modal.translate";
 
 @Component({
     selector: "app-home-add-modal",
@@ -9,8 +11,11 @@ import { EditableConditionGroup, ConditionGroup, IpCondition, WifiCondition } fr
 })
 export class HomeAddModalComponent {
     public editableConditionGroup: EditableConditionGroup = { name: "", conditions: [{ type: "Ip", value: "" }] };
+    public homeAddModalTranslate: HomeAddModalTranslate;
 
-    constructor(public activeModal: NgbActiveModal) {}
+    constructor(public activeModal: NgbActiveModal, private readonly translateService: TranslateService) {
+        this.homeAddModalTranslate = this.translateService.getAppTranslate().homeAddModalTranslate;
+    }
 
     addEditableCondition() {
         this.editableConditionGroup.conditions.push({ type: "Ip", value: "" });
