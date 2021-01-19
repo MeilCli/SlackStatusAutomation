@@ -1,3 +1,4 @@
+// execute on main process
 import { ipcMain, BrowserWindow } from "electron";
 
 export class Logger {

@@ -1,7 +1,8 @@
+// execute on main process
 import { ipcMain } from "electron";
 import { setInterval, clearInterval } from "timers";
-import { Account, Status, StatusAutomation } from "./src/app/entities";
-import { createSlackClient } from "./src/app/slack";
+import { Account, Status, StatusAutomation } from "./app/entities";
+import { createSlackClient } from "./app/slack";
 import { Logger } from "./logger";
 import { v4, v6 } from "public-ip";
 const wifi = require("node-wifi");

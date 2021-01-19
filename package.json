@@ -1,6 +1,9 @@
 {
     "name": "slack-status-automation",
     "version": "0.0.0",
+    "author": "MeilCli",
+    "description": "SlackStatusAutomation",
+    "license": "MIT",
     "main": "main.js",
     "scripts": {
         "postinstall": "electron-builder install-app-deps",

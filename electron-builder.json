@@ -5,11 +5,18 @@
     },
     "files": [
         "**/*",
+        "build/**/*.png",
+        "!**/node_modules/*/{CHANGELOG.md,README.md,README,readme.md,readme}",
+        "!**/node_modules/*/{test,__tests__,tests,powered-test,example,examples}",
+        "!**/node_modules/*.d.ts",
+        "!**/node_modules/.bin",
         "!**/*.ts",
         "!LICENSE.txt",
         "!package.json",
         "!package-lock.json",
-        "!src/",
+        "!src/**/*.ts",
+        "!src/**/*.html",
+        "!src/**/*.scss",
         "!e2e/",
         "!hooks/",
         "!angular.json",
@@ -23,15 +30,12 @@
         "!.prettierrc"
     ],
     "win": {
-        "icon": "dist/assets/icons",
         "target": ["portable"]
     },
     "mac": {
-        "icon": "dist/assets/icons",
         "target": ["dmg"]
     },
     "linux": {
-        "icon": "dist/assets/icons",
         "target": ["AppImage"]
     }
 }

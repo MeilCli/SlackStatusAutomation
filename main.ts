@@ -2,8 +2,8 @@ import { app, BrowserWindow, screen, ipcMain, powerMonitor, Menu } from "electro
 import * as express from "express";
 import { menubar } from "menubar";
 import { Server } from "http";
-import { Logger } from "./logger";
-import { Automation } from "./automation";
+import { Logger } from "./src/logger";
+import { Automation } from "./src/automation";
 
 let win: BrowserWindow | null = null;
 let server: Server | null = null;
@@ -16,6 +16,7 @@ const mb = menubar({
         height: 800,
         webPreferences: { nodeIntegration: true, contextIsolation: false, enableRemoteModule: true },
     },
+    icon: `${__dirname}/build/menu.png`,
 });
 
 function createWindow(): BrowserWindow {
