@@ -4,6 +4,7 @@ import { menubar } from "menubar";
 import { Server } from "http";
 import { Logger } from "./src/logger";
 import { Automation } from "./src/automation";
+import { Shell } from "./src/shell";
 
 let win: BrowserWindow | null = null;
 let server: Server | null = null;
@@ -59,6 +60,7 @@ function createWindow(): BrowserWindow {
 try {
     const logger = new Logger();
     const automation = new Automation(logger);
+    const shell = new Shell();
 
     // This method will be called when Electron has finished
     // initialization and is ready to create browser windows.
@@ -135,4 +137,5 @@ try {
 
     logger.start();
     automation.start();
+    shell.start();
 } catch (e) {}

@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { shell } from "electron";
+import { ShellService } from "src/app/services/shell.service";
 import { TranslateService } from "src/app/services/translate.service";
 import { AboutTranslate } from "./about.translate";
 
@@ -104,11 +104,11 @@ export class AboutComponent {
     ];
     public aboutTranslate: AboutTranslate;
 
-    constructor(private readonly translateService: TranslateService) {
+    constructor(private readonly translateService: TranslateService, private readonly shellService: ShellService) {
         this.aboutTranslate = this.translateService.getAppTranslate().aboutTranslate;
     }
 
     openExternalBrowser(url: string) {
-        shell.openExternal(url);
+        this.shellService.openExternalBrowser(url);
     }
 }

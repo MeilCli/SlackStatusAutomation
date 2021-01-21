@@ -1,10 +1,11 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
-import { shell, ipcRenderer } from "electron";
+import { ipcRenderer } from "electron";
 import { createSlackClient, OauthV2AccessResult, AuthTestResult } from "../../slack";
 import { environment } from "../../../environments/environment";
 import { StoreService } from "src/app/services/store.service";
 import { Router } from "@angular/router";
 import { Status, StatusAutomation } from "src/app/entities";
+import { ShellService } from "src/app/services/shell.service";
 
 interface Application {
     clientId: string;
@@ -30,7 +31,11 @@ export class OauthComponent implements OnInit, OnDestroy {
     public customClientSecret = "";
     public environment: Environment = environment;
 
-    constructor(private router: Router, private storeService: StoreService) {}
+    constructor(
+        private router: Router,
+        private readonly storeService: StoreService,
+        private readonly shellService: ShellService
+    ) {}
 
     authorizeUrl(clientId: string): string {
         const clientIdParameter = `client_id=${clientId}`;
@@ -58,7 +63,7 @@ export class OauthComponent implements OnInit, OnDestroy {
             return;
         }
         this.currentRequest = "custom";
-        shell.openExternal(this.authorizeUrl(this.customClientId));
+        this.shellService.openExternalBrowser(this.authorizeUrl(this.customClientId));
     }
 
     onClickAuthenticate(index: number) {
@@ -66,7 +71,7 @@ export class OauthComponent implements OnInit, OnDestroy {
             return;
         }
         this.currentRequest = index;
-        shell.openExternal(this.authorizeUrl(this.environment.applications[index].clientId));
+        this.shellService.openExternalBrowser(this.authorizeUrl(this.environment.applications[index].clientId));
     }
 
     findCurrentRequestClient(): [string, string] | null {
