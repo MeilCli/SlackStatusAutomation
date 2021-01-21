@@ -4,6 +4,7 @@ import { Logger } from "./src/logger";
 import { Automation } from "./src/automation";
 import { Shell } from "./src/shell";
 import { Oauth } from "./src/oauth";
+import { Store } from "./src/store";
 
 let win: BrowserWindow | null = null;
 const args = process.argv.slice(1),
@@ -60,6 +61,7 @@ try {
     const automation = new Automation(logger);
     const shell = new Shell();
     const oauth = new Oauth();
+    const store = new Store();
 
     // This method will be called when Electron has finished
     // initialization and is ready to create browser windows.
@@ -121,4 +123,5 @@ try {
     automation.start();
     shell.start();
     oauth.start();
+    store.start();
 } catch (e) {}

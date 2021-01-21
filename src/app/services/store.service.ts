@@ -1,8 +1,7 @@
 import { Injectable } from "@angular/core";
+import { ipcRenderer } from "electron";
 import * as Store from "electron-store";
 import { Account, Emoji, EmojiAlias, StatusAutomation, Status } from "../entities";
-
-const defaultIntervalSeconds = 180;
 
 @Injectable({
     providedIn: "root",
@@ -17,86 +16,42 @@ export class StoreService {
     constructor() {}
 
     async addAccount(token: string, userId: string, userName: string, teamId: string, teamName: string) {
-        const accounts = this.accountStore.get(this.accountsKey, []);
-        const foundIndex = accounts.findIndex((x) => x.userId == userId && x.teamId == teamId);
-        if (0 <= foundIndex) {
-            accounts[foundIndex].token = token;
-        } else {
-            accounts.push({
-                token,
-                userId,
-                userName,
-                teamId,
-                teamName,
-                intervalSeconds: defaultIntervalSeconds,
-                automationEnabled: false,
-                emojiList: [],
-                statusAutomations: [],
-                defaultStatus: { emoji: null, message: "" },
-            });
-        }
-
-        this.accountStore.set(this.accountsKey, accounts);
+        await ipcRenderer.invoke("store-add-account", token, userId, userName, teamId, teamName);
     }
 
     async clearAccounts() {
-        this.accountStore.delete(this.accountsKey);
+        await ipcRenderer.invoke("store-clear-accounts");
     }
 
     async getAccounts(): Promise<Account[]> {
-        return this.accountStore.get(this.accountsKey, []);
+        return (await ipcRenderer.invoke("store-get-accounts")) as Account[];
     }
 
     async updateIntervalSeconds(userId: string, teamId: string, intervalSeconds: number) {
-        const accounts = this.accountStore.get(this.accountsKey, []);
-        const foundIndex = accounts.findIndex((x) => x.userId == userId && x.teamId == teamId);
-        if (0 <= foundIndex) {
-            accounts[foundIndex].intervalSeconds = intervalSeconds;
-            this.accountStore.set(this.accountsKey, accounts);
-        }
+        await ipcRenderer.invoke("store-update-interval-seconds", userId, teamId, intervalSeconds);
     }
 
     async updateAutomationEnabled(userId: string, teamId: string, automationEnabled: boolean) {
-        const accounts = this.accountStore.get(this.accountsKey, []);
-        const foundIndex = accounts.findIndex((x) => x.userId == userId && x.teamId == teamId);
-        if (0 <= foundIndex) {
-            accounts[foundIndex].automationEnabled = automationEnabled;
-            this.accountStore.set(this.accountsKey, accounts);
-        }
+        await ipcRenderer.invoke("store-update-automation-enabled", userId, teamId, automationEnabled);
     }
 
     async updateEmojiList(userId: string, teamId: string, emojiList: (Emoji | EmojiAlias)[]) {
-        const accounts = this.accountStore.get(this.accountsKey, []);
-        const foundIndex = accounts.findIndex((x) => x.userId == userId && x.teamId == teamId);
-        if (0 <= foundIndex) {
-            accounts[foundIndex].emojiList = emojiList;
-            this.accountStore.set(this.accountsKey, accounts);
-        }
+        await ipcRenderer.invoke("store-update-emoji-list", userId, teamId, emojiList);
     }
 
     async updateStatusAutomations(userId: string, teamId: string, statusAutomations: StatusAutomation[]) {
-        const accounts = this.accountStore.get(this.accountsKey, []);
-        const foundIndex = accounts.findIndex((x) => x.userId == userId && x.teamId == teamId);
-        if (0 <= foundIndex) {
-            accounts[foundIndex].statusAutomations = statusAutomations;
-            this.accountStore.set(this.accountsKey, accounts);
-        }
+        await ipcRenderer.invoke("store-update-status-automations", userId, teamId, statusAutomations);
     }
 
     async updateDefaultStatus(userId: string, teamId: string, defaultStatus: Status) {
-        const accounts = this.accountStore.get(this.accountsKey, []);
-        const foundIndex = accounts.findIndex((x) => x.userId == userId && x.teamId == teamId);
-        if (0 <= foundIndex) {
-            accounts[foundIndex].defaultStatus = defaultStatus;
-            this.accountStore.set(this.accountsKey, accounts);
-        }
+        await ipcRenderer.invoke("store-update-default-status", userId, teamId, defaultStatus);
     }
 
     async getLanguage(): Promise<string> {
-        return this.languageStore.get(this.languageKey, navigator.language);
+        return (await ipcRenderer.invoke("store-get-language")) as string;
     }
 
     async setLanguage(value: string) {
-        this.languageStore.set(this.languageKey, value);
+        await ipcRenderer.invoke("store-set-language", value);
     }
 }
