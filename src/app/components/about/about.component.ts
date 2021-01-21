@@ -105,7 +105,10 @@ export class AboutComponent {
     public aboutTranslate: AboutTranslate;
 
     constructor(private readonly translateService: TranslateService, private readonly shellService: ShellService) {
-        this.aboutTranslate = this.translateService.getAppTranslate().aboutTranslate;
+        this.aboutTranslate = this.translateService.getDefaultAppTranslate().aboutTranslate;
+        this.translateService.getAppTranslate().then((value) => {
+            this.aboutTranslate = value.aboutTranslate;
+        });
     }
 
     openExternalBrowser(url: string) {

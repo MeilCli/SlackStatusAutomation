@@ -20,7 +20,10 @@ export class LogComponent implements OnInit, OnDestroy {
         private readonly translateService: TranslateService,
         private readonly zone: NgZone
     ) {
-        this.logTranslate = this.translateService.getAppTranslate().logTranslate;
+        this.logTranslate = this.translateService.getDefaultAppTranslate().logTranslate;
+        this.translateService.getAppTranslate().then((value) => {
+            this.logTranslate = value.logTranslate;
+        });
     }
 
     async ngOnInit() {

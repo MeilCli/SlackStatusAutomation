@@ -104,7 +104,7 @@ export class OauthComponent implements OnInit, OnDestroy {
         })) as OauthV2AccessResult;
         const autorizedClient = createSlackClient(oauthAccessResponse.authed_user.access_token);
         const authTestResponse = (await autorizedClient.auth.test()) as AuthTestResult;
-        this.storeService.addAccount(
+        await this.storeService.addAccount(
             oauthAccessResponse.authed_user.access_token,
             authTestResponse.user_id,
             authTestResponse.user,
@@ -116,14 +116,14 @@ export class OauthComponent implements OnInit, OnDestroy {
             const statusAutomations: StatusAutomation[] | undefined | null = application.statusAutomations;
             const defaultStatus: Status | undefined | null = application.defaultStatus;
             if (statusAutomations != undefined && statusAutomations != null) {
-                this.storeService.updateStatusAutomations(
+                await this.storeService.updateStatusAutomations(
                     authTestResponse.user_id,
                     authTestResponse.team_id,
                     statusAutomations
                 );
             }
             if (defaultStatus !== undefined && defaultStatus != null) {
-                this.storeService.updateDefaultStatus(
+                await this.storeService.updateDefaultStatus(
                     authTestResponse.user_id,
                     authTestResponse.team_id,
                     defaultStatus

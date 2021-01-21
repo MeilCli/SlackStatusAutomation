@@ -25,8 +25,11 @@ export class HomeComponent {
     private _automationEnabled = false;
     set automationEnabled(value: boolean) {
         this._automationEnabled = value;
-        this.storeService.updateAutomationEnabled(this.account.userId, this.account.teamId, value);
-        this.automationService.updateAccount();
+        if (this.account != null) {
+            this.storeService.updateAutomationEnabled(this.account.userId, this.account.teamId, value).then(() => {
+                this.automationService.updateAccount();
+            });
+        }
     }
     get automationEnabled(): boolean {
         return this._automationEnabled;
@@ -35,17 +38,18 @@ export class HomeComponent {
     private _intervalSeconds: number | null = 0;
     set intervalSeconds(value: number | null) {
         this._intervalSeconds = value;
-        if (value != null && 30 <= value) {
-            this.storeService.updateIntervalSeconds(this.account.userId, this.account.teamId, value);
-            this.automationService.updateAccount();
+        if (this.account != null && value != null && 30 <= value) {
+            this.storeService.updateIntervalSeconds(this.account.userId, this.account.teamId, value).then(() => {
+                this.automationService.updateAccount();
+            });
         }
     }
     get intervalSeconds(): number | null {
         return this._intervalSeconds;
     }
 
-    public account: Account;
-    public defaultStatus: Status;
+    public account: Account | null = null;
+    public defaultStatus: Status = { emoji: null, message: "" };
     public statusAutomations: StatusAutomation[] = [];
     public homeTranslate: HomeTranslate;
 
@@ -55,33 +59,50 @@ export class HomeComponent {
         private readonly translateService: TranslateService,
         private readonly modalService: NgbModal
     ) {
-        this.account = storeService.getAccounts()[0];
-        this._automationEnabled = this.account.automationEnabled;
-        this._intervalSeconds = this.account.intervalSeconds;
-        this.statusAutomations = this.account.statusAutomations;
-        this.defaultStatus = this.account.defaultStatus;
-        this.homeTranslate = this.translateService.getAppTranslate().homeTranslate;
+        this.storeService.getAccounts().then((accounts) => {
+            this.account = accounts[0];
+            this._automationEnabled = this.account.automationEnabled;
+            this._intervalSeconds = this.account.intervalSeconds;
+            this.statusAutomations = this.account.statusAutomations;
+            this.defaultStatus = this.account.defaultStatus;
+        });
+        this.homeTranslate = this.translateService.getDefaultAppTranslate().homeTranslate;
+        this.translateService.getAppTranslate().then((value) => {
+            this.homeTranslate = value.homeTranslate;
+        });
     }
 
-    onDefaultStatusChanged(event: Status) {
+    async onDefaultStatusChanged(event: Status) {
+        if (this.account == null) {
+            return;
+        }
+
         this.defaultStatus = event;
-        this.storeService.updateDefaultStatus(this.account.userId, this.account.teamId, this.defaultStatus);
+        await this.storeService.updateDefaultStatus(this.account.userId, this.account.teamId, this.defaultStatus);
         this.automationService.updateAccount();
     }
 
-    onStatusAutomationChanged() {
-        this.storeService.updateStatusAutomations(this.account.userId, this.account.teamId, this.statusAutomations);
+    async onStatusAutomationChanged() {
+        if (this.account == null) {
+            return;
+        }
+
+        await this.storeService.updateStatusAutomations(
+            this.account.userId,
+            this.account.teamId,
+            this.statusAutomations
+        );
         this.automationService.updateAccount();
     }
 
-    onStatusAutomationStatusChanged(event: Status, index: number) {
+    async onStatusAutomationStatusChanged(event: Status, index: number) {
         this.statusAutomations[index].status = event;
-        this.onStatusAutomationChanged();
+        await this.onStatusAutomationChanged();
     }
 
-    onStatusAutomationRemoveClicked(index: number) {
+    async onStatusAutomationRemoveClicked(index: number) {
         this.statusAutomations = this.statusAutomations.filter((x, i) => i != index);
-        this.onStatusAutomationChanged();
+        await this.onStatusAutomationChanged();
     }
 
     async openAddStatusAutomationModal() {
@@ -91,7 +112,7 @@ export class HomeComponent {
             conditionGroup: result,
             status: { emoji: null, message: "" },
         });
-        this.onStatusAutomationChanged();
+        await this.onStatusAutomationChanged();
     }
 
     async openEditStatusAutomationModal(index: number) {
@@ -110,7 +131,7 @@ export class HomeComponent {
         (modalRef.componentInstance as HomeEditModalComponent).editableConditionGroup = editableConditionGroup;
         const result = (await modalRef.result) as ConditionGroup;
         this.statusAutomations[index].conditionGroup = result;
-        this.onStatusAutomationChanged();
+        await this.onStatusAutomationChanged();
     }
 
     async openDeleteStatusAutomationModal(index: number) {
@@ -129,6 +150,6 @@ export class HomeComponent {
         (modalRef.componentInstance as HomeDeleteModalComponent).editableConditionGroup = editableConditionGroup;
         await modalRef.result;
         this.statusAutomations = this.statusAutomations.filter((_, i) => index != i);
-        this.onStatusAutomationChanged();
+        await this.onStatusAutomationChanged();
     }
 }

@@ -16,7 +16,10 @@ export class HomeEditModalComponent {
     public homeEditModalTranslate: HomeEditModalTranslate;
 
     constructor(public activeModal: NgbActiveModal, private readonly translateService: TranslateService) {
-        this.homeEditModalTranslate = this.translateService.getAppTranslate().homeEditModalTranslate;
+        this.homeEditModalTranslate = this.translateService.getDefaultAppTranslate().homeEditModalTranslate;
+        this.translateService.getAppTranslate().then((value) => {
+            this.homeEditModalTranslate = value.homeEditModalTranslate;
+        });
     }
 
     addEditableCondition() {

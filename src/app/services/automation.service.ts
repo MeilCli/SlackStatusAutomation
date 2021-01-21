@@ -8,13 +8,13 @@ import { StoreService } from "./store.service";
 export class AutomationService {
     constructor(private readonly storeService: StoreService) {}
 
-    startApplication() {
-        const accounts = this.storeService.getAccounts();
+    async startApplication() {
+        const accounts = await this.storeService.getAccounts();
         ipcRenderer.send("automation-update", accounts);
     }
 
-    updateAccount() {
-        const accounts = this.storeService.getAccounts();
+    async updateAccount() {
+        const accounts = await this.storeService.getAccounts();
         ipcRenderer.send("automation-update", accounts);
     }
 }

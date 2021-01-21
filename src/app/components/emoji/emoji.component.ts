@@ -21,19 +21,28 @@ interface CustomEmoji {
     styleUrls: ["./emoji.component.scss"],
 })
 export class EmojiComponent {
-    private account: Account;
+    private account: Account | null = null;
 
     public syncMessage = "";
     public customEmojis: CustomEmoji[] = [];
     public emojiTranslate: EmojiTranslate;
 
     constructor(private readonly storeService: StoreService, private readonly translateService: TranslateService) {
-        this.account = storeService.getAccounts()[0];
-        this.updateCustomEmojis();
-        this.emojiTranslate = this.translateService.getAppTranslate().emojiTranslate;
+        this.storeService.getAccounts().then((accounts) => {
+            this.account = accounts[0];
+            this.updateCustomEmojis();
+        });
+        this.emojiTranslate = this.translateService.getDefaultAppTranslate().emojiTranslate;
+        this.translateService.getAppTranslate().then((value) => {
+            this.emojiTranslate = value.emojiTranslate;
+        });
     }
 
     async onclickSyncCustomEmoji() {
+        if (this.account == null) {
+            return;
+        }
+
         const client = createSlackClient(this.account.token);
         const emojiListResponse = (await client.emoji.list()) as EmojiListResult;
         const entities = emojiListResponse.emoji;
@@ -57,12 +66,16 @@ export class EmojiComponent {
             }
         }
         this.account.emojiList = result;
-        this.storeService.updateEmojiList(this.account.userId, this.account.teamId, result);
+        await this.storeService.updateEmojiList(this.account.userId, this.account.teamId, result);
         this.syncMessage = this.emojiTranslate.scynedCustomEmoji(result.length);
         this.updateCustomEmojis();
     }
 
     updateCustomEmojis() {
+        if (this.account == null) {
+            return;
+        }
+
         const newList: CustomEmoji[] = [];
         for (const emoji of this.account.emojiList) {
             if (emoji.__typename == "Emoji") {

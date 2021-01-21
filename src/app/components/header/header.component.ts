@@ -30,7 +30,10 @@ export class HeaderComponent {
 
     constructor(route: ActivatedRoute, private readonly translateService: TranslateService) {
         this.activePath = route.snapshot.url.map((x) => x.path).join("/");
-        this._headerTranslate = this.translateService.getAppTranslate().headerTranslate;
+        this._headerTranslate = this.translateService.getDefaultAppTranslate().headerTranslate;
+        this.translateService.getAppTranslate().then((value) => {
+            this.headerTranslate = value.headerTranslate;
+        });
         this.createLink();
     }
 

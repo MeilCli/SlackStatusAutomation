@@ -10,8 +10,8 @@ import { StoreService } from "src/app/services/store.service";
 export class AccountComponent {
     constructor(private readonly storeService: StoreService, private readonly router: Router) {}
 
-    clearAccounts() {
-        this.storeService.clearAccounts();
+    async clearAccounts() {
+        await this.storeService.clearAccounts();
         this.router.navigateByUrl("oauth");
     }
 }

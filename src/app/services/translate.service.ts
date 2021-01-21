@@ -6,10 +6,22 @@ import { StoreService } from "./store.service";
     providedIn: "root",
 })
 export class TranslateService {
+    private cachedAppTranslate: AppTranslate | null = null;
+
     constructor(private readonly storeService: StoreService) {}
 
-    getAppTranslate(): AppTranslate {
-        switch (this.storeService.getLanguage()) {
+    getDefaultAppTranslate(): AppTranslate {
+        const result = this.cachedAppTranslate ?? enAppTranslate;
+        if (this.cachedAppTranslate == null) {
+            this.getAppTranslate().then((value) => {
+                this.cachedAppTranslate = value;
+            });
+        }
+        return result;
+    }
+
+    async getAppTranslate(): Promise<AppTranslate> {
+        switch (await this.storeService.getLanguage()) {
             case "ja":
                 return jaAppTranslate;
             default:
@@ -17,7 +29,8 @@ export class TranslateService {
         }
     }
 
-    changeTranslate(value: "en" | "ja") {
-        this.storeService.setLanguage(value);
+    async changeTranslate(value: "en" | "ja") {
+        await this.storeService.setLanguage(value);
+        this.cachedAppTranslate = await this.getAppTranslate();
     }
 }

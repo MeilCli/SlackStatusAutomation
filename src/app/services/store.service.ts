@@ -16,7 +16,7 @@ export class StoreService {
 
     constructor() {}
 
-    addAccount(token: string, userId: string, userName: string, teamId: string, teamName: string) {
+    async addAccount(token: string, userId: string, userName: string, teamId: string, teamName: string) {
         const accounts = this.accountStore.get(this.accountsKey, []);
         const foundIndex = accounts.findIndex((x) => x.userId == userId && x.teamId == teamId);
         if (0 <= foundIndex) {
@@ -39,15 +39,15 @@ export class StoreService {
         this.accountStore.set(this.accountsKey, accounts);
     }
 
-    clearAccounts() {
+    async clearAccounts() {
         this.accountStore.delete(this.accountsKey);
     }
 
-    getAccounts(): Account[] {
+    async getAccounts(): Promise<Account[]> {
         return this.accountStore.get(this.accountsKey, []);
     }
 
-    updateIntervalSeconds(userId: string, teamId: string, intervalSeconds: number) {
+    async updateIntervalSeconds(userId: string, teamId: string, intervalSeconds: number) {
         const accounts = this.accountStore.get(this.accountsKey, []);
         const foundIndex = accounts.findIndex((x) => x.userId == userId && x.teamId == teamId);
         if (0 <= foundIndex) {
@@ -56,7 +56,7 @@ export class StoreService {
         }
     }
 
-    updateAutomationEnabled(userId: string, teamId: string, automationEnabled: boolean) {
+    async updateAutomationEnabled(userId: string, teamId: string, automationEnabled: boolean) {
         const accounts = this.accountStore.get(this.accountsKey, []);
         const foundIndex = accounts.findIndex((x) => x.userId == userId && x.teamId == teamId);
         if (0 <= foundIndex) {
@@ -65,7 +65,7 @@ export class StoreService {
         }
     }
 
-    updateEmojiList(userId: string, teamId: string, emojiList: (Emoji | EmojiAlias)[]) {
+    async updateEmojiList(userId: string, teamId: string, emojiList: (Emoji | EmojiAlias)[]) {
         const accounts = this.accountStore.get(this.accountsKey, []);
         const foundIndex = accounts.findIndex((x) => x.userId == userId && x.teamId == teamId);
         if (0 <= foundIndex) {
@@ -74,7 +74,7 @@ export class StoreService {
         }
     }
 
-    updateStatusAutomations(userId: string, teamId: string, statusAutomations: StatusAutomation[]) {
+    async updateStatusAutomations(userId: string, teamId: string, statusAutomations: StatusAutomation[]) {
         const accounts = this.accountStore.get(this.accountsKey, []);
         const foundIndex = accounts.findIndex((x) => x.userId == userId && x.teamId == teamId);
         if (0 <= foundIndex) {
@@ -83,7 +83,7 @@ export class StoreService {
         }
     }
 
-    updateDefaultStatus(userId: string, teamId: string, defaultStatus: Status) {
+    async updateDefaultStatus(userId: string, teamId: string, defaultStatus: Status) {
         const accounts = this.accountStore.get(this.accountsKey, []);
         const foundIndex = accounts.findIndex((x) => x.userId == userId && x.teamId == teamId);
         if (0 <= foundIndex) {
@@ -92,11 +92,11 @@ export class StoreService {
         }
     }
 
-    getLanguage(): string {
+    async getLanguage(): Promise<string> {
         return this.languageStore.get(this.languageKey, navigator.language);
     }
 
-    setLanguage(value: string) {
+    async setLanguage(value: string) {
         this.languageStore.set(this.languageKey, value);
     }
 }

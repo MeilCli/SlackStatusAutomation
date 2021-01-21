@@ -16,6 +16,9 @@ export class HomeDeleteModalComponent {
     public homeDeleteModalTranslate: HomeDeleteModalTranslate;
 
     constructor(public activeModal: NgbActiveModal, private readonly translateService: TranslateService) {
-        this.homeDeleteModalTranslate = this.translateService.getAppTranslate().homeDeleteModalTranslate;
+        this.homeDeleteModalTranslate = this.translateService.getDefaultAppTranslate().homeDeleteModalTranslate;
+        this.translateService.getAppTranslate().then((value) => {
+            this.homeDeleteModalTranslate = value.homeDeleteModalTranslate;
+        });
     }
 }

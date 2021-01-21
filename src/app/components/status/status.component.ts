@@ -42,7 +42,10 @@ export class StatusComponent {
     public statusTranslate: StatusTranslate;
 
     constructor(private readonly translateService: TranslateService) {
-        this.statusTranslate = translateService.getAppTranslate().statusTranslate;
+        this.statusTranslate = this.translateService.getDefaultAppTranslate().statusTranslate;
+        this.translateService.getAppTranslate().then((value) => {
+            this.statusTranslate = value.statusTranslate;
+        });
     }
 
     toggleStatusEmojiPopover(popover: { isOpen: () => boolean; close: () => void; open: () => void }) {

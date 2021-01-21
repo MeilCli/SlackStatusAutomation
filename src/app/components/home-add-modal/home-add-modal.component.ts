@@ -14,7 +14,10 @@ export class HomeAddModalComponent {
     public homeAddModalTranslate: HomeAddModalTranslate;
 
     constructor(public activeModal: NgbActiveModal, private readonly translateService: TranslateService) {
-        this.homeAddModalTranslate = this.translateService.getAppTranslate().homeAddModalTranslate;
+        this.homeAddModalTranslate = this.translateService.getDefaultAppTranslate().homeAddModalTranslate;
+        this.translateService.getAppTranslate().then((value) => {
+            this.homeAddModalTranslate = value.homeAddModalTranslate;
+        });
     }
 
     addEditableCondition() {

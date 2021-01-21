@@ -22,15 +22,20 @@ export class LanguageComponent {
     public headerTranslate: HeaderTranslate;
 
     constructor(private readonly translateService: TranslateService) {
-        const appTranslate = this.translateService.getAppTranslate();
+        const defaultAppTranslate = this.translateService.getDefaultAppTranslate();
+        this.languageTranslate = defaultAppTranslate.languageTranslate;
+        this.headerTranslate = defaultAppTranslate.headerTranslate;
+        this.updateAppTranslate();
+    }
+
+    async updateAppTranslate() {
+        const appTranslate = await this.translateService.getAppTranslate();
         this.languageTranslate = appTranslate.languageTranslate;
         this.headerTranslate = appTranslate.headerTranslate;
     }
 
-    onLanguageClicked(value: "en" | "ja") {
-        this.translateService.changeTranslate(value);
-        const appTranslate = this.translateService.getAppTranslate();
-        this.languageTranslate = appTranslate.languageTranslate;
-        this.headerTranslate = appTranslate.headerTranslate;
+    async onLanguageClicked(value: "en" | "ja") {
+        await this.translateService.changeTranslate(value);
+        await this.updateAppTranslate();
     }
 }
