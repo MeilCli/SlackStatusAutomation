@@ -1,13 +1,11 @@
-import { app, BrowserWindow, screen, ipcMain, powerMonitor, Menu } from "electron";
-import * as express from "express";
+import { app, BrowserWindow, screen, powerMonitor, Menu } from "electron";
 import { menubar } from "menubar";
-import { Server } from "http";
 import { Logger } from "./src/logger";
 import { Automation } from "./src/automation";
 import { Shell } from "./src/shell";
+import { Oauth } from "./src/oauth";
 
 let win: BrowserWindow | null = null;
-let server: Server | null = null;
 const args = process.argv.slice(1),
     serve = args.some((val) => val === "--serve");
 const mb = menubar({
@@ -61,6 +59,7 @@ try {
     const logger = new Logger();
     const automation = new Automation(logger);
     const shell = new Shell();
+    const oauth = new Oauth();
 
     // This method will be called when Electron has finished
     // initialization and is ready to create browser windows.
@@ -118,24 +117,8 @@ try {
         }
     });
 
-    ipcMain.on("oauthStart", (event) => {
-        const expressApp = express();
-        expressApp.get("/", (req, res) => {
-            const code = req.query["code"];
-            if (typeof code == "string") {
-                event.sender.send("oauthCallback", code);
-                res.send("authenticated");
-            } else {
-                res.send("unknown error");
-            }
-        });
-        server = expressApp.listen(3333, () => {});
-    });
-    ipcMain.on("oauthEnd", () => {
-        server?.close();
-    });
-
     logger.start();
     automation.start();
     shell.start();
+    oauth.start();
 } catch (e) {}

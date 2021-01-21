@@ -1,11 +1,11 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
-import { ipcRenderer } from "electron";
 import { createSlackClient, OauthV2AccessResult, AuthTestResult } from "../../slack";
 import { environment } from "../../../environments/environment";
 import { StoreService } from "src/app/services/store.service";
 import { Router } from "@angular/router";
 import { Status, StatusAutomation } from "src/app/entities";
 import { ShellService } from "src/app/services/shell.service";
+import { OauthService } from "src/app/services/oauth.service";
 
 interface Application {
     clientId: string;
@@ -34,7 +34,8 @@ export class OauthComponent implements OnInit, OnDestroy {
     constructor(
         private router: Router,
         private readonly storeService: StoreService,
-        private readonly shellService: ShellService
+        private readonly shellService: ShellService,
+        private readonly oauthService: OauthService
     ) {}
 
     authorizeUrl(clientId: string): string {
@@ -45,17 +46,13 @@ export class OauthComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        ipcRenderer.send("oauthStart");
-        ipcRenderer.on("oauthCallback", (_, arg) => {
-            if (typeof arg == "string") {
-                this.requestAccessToken(arg);
-            }
+        this.oauthService.start((code) => {
+            this.requestAccessToken(code);
         });
     }
 
     ngOnDestroy(): void {
-        ipcRenderer.send("oauthEnd");
-        ipcRenderer.removeAllListeners("oauthCallback");
+        this.oauthService.end();
     }
 
     onClickCustomAuthenticate() {
