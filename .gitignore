@@ -47,6 +47,8 @@ Thumbs.db
 
 main.js
 main.js.map
+preload.js
+preload.js.map
 /src/**/*.js
 /src/**/*.js.map
 release

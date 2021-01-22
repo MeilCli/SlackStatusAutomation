@@ -1,21 +1,23 @@
 import { Injectable } from "@angular/core";
-import { ipcRenderer } from "electron";
+import { OauthApi } from "src/oauth";
+
+declare global {
+    interface Window {
+        oauth: OauthApi;
+    }
+}
 
 @Injectable({
     providedIn: "root",
 })
 export class OauthService {
     start(handler: (code: string) => void) {
-        ipcRenderer.send("oauth-start");
-        ipcRenderer.on("oauth-callback", (_, arg) => {
-            if (typeof arg == "string") {
-                handler(arg);
-            }
-        });
+        window.oauth.start();
+        window.oauth.callback(handler);
     }
 
     end() {
-        ipcRenderer.send("oauth-end");
-        ipcRenderer.removeAllListeners("oauth-callback");
+        window.oauth.end();
+        window.oauth.removeCallback();
     }
 }

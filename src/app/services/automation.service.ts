@@ -1,6 +1,12 @@
 import { Injectable } from "@angular/core";
-import { ipcRenderer } from "electron";
+import { AutomationApi } from "src/automation";
 import { StoreService } from "./store.service";
+
+declare global {
+    interface Window {
+        automation: AutomationApi;
+    }
+}
 
 @Injectable({
     providedIn: "root",
@@ -10,11 +16,11 @@ export class AutomationService {
 
     async startApplication() {
         const accounts = await this.storeService.getAccounts();
-        ipcRenderer.send("automation-update", accounts);
+        window.automation.update(accounts);
     }
 
     async updateAccount() {
         const accounts = await this.storeService.getAccounts();
-        ipcRenderer.send("automation-update", accounts);
+        window.automation.update(accounts);
     }
 }

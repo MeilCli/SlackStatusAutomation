@@ -1,7 +1,33 @@
 // execute on main process
-import { ipcMain } from "electron";
+import { ipcMain, ipcRenderer } from "electron";
 import * as express from "express";
 import { Server } from "http";
+
+export interface OauthApi {
+    start: () => void;
+    callback: (handler: (code: string) => void) => void;
+    end: () => void;
+    removeCallback: () => void;
+}
+
+export const oauthApi: OauthApi = {
+    start: () => {
+        ipcRenderer.send("oauth-start");
+    },
+    callback: (handler: (code: string) => void) => {
+        ipcRenderer.on("oauth-callback", (_, arg) => {
+            if (typeof arg == "string") {
+                handler(arg);
+            }
+        });
+    },
+    end: () => {
+        ipcRenderer.send("oauth-end");
+    },
+    removeCallback: () => {
+        ipcRenderer.removeAllListeners("oauth-callback");
+    },
+};
 
 export class Oauth {
     private server: Server | null = null;

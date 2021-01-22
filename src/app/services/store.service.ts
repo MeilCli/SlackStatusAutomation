@@ -1,57 +1,56 @@
 import { Injectable } from "@angular/core";
 import { ipcRenderer } from "electron";
-import * as Store from "electron-store";
+import { windowsStore } from "process";
+import { StoreApi } from "src/store";
 import { Account, Emoji, EmojiAlias, StatusAutomation, Status } from "../entities";
+
+declare global {
+    interface Window {
+        store: StoreApi;
+    }
+}
 
 @Injectable({
     providedIn: "root",
 })
 export class StoreService {
-    private accountsKey = "tokens";
-    // not for security, for obfuscation
-    private accountStore = new Store<Record<string, Account[]>>({ encryptionKey: "SlackStatusAutomation" });
-    private languageKey = "language";
-    private languageStore = new Store<Record<string, string>>({ name: "language" });
-
-    constructor() {}
-
     async addAccount(token: string, userId: string, userName: string, teamId: string, teamName: string) {
-        await ipcRenderer.invoke("store-add-account", token, userId, userName, teamId, teamName);
+        await window.store.addAccount(token, userId, userName, teamId, teamName);
     }
 
     async clearAccounts() {
-        await ipcRenderer.invoke("store-clear-accounts");
+        await window.store.clearAccounts();
     }
 
     async getAccounts(): Promise<Account[]> {
-        return (await ipcRenderer.invoke("store-get-accounts")) as Account[];
+        return await window.store.getAccounts();
     }
 
     async updateIntervalSeconds(userId: string, teamId: string, intervalSeconds: number) {
-        await ipcRenderer.invoke("store-update-interval-seconds", userId, teamId, intervalSeconds);
+        await window.store.updateIntervalSeconds(userId, teamId, intervalSeconds);
     }
 
     async updateAutomationEnabled(userId: string, teamId: string, automationEnabled: boolean) {
-        await ipcRenderer.invoke("store-update-automation-enabled", userId, teamId, automationEnabled);
+        await window.store.updateAutomationEnabled(userId, teamId, automationEnabled);
     }
 
     async updateEmojiList(userId: string, teamId: string, emojiList: (Emoji | EmojiAlias)[]) {
-        await ipcRenderer.invoke("store-update-emoji-list", userId, teamId, emojiList);
+        await window.store.updateEmojiList(userId, teamId, emojiList);
     }
 
     async updateStatusAutomations(userId: string, teamId: string, statusAutomations: StatusAutomation[]) {
-        await ipcRenderer.invoke("store-update-status-automations", userId, teamId, statusAutomations);
+        await window.store.updateStatusAutomations(userId, teamId, statusAutomations);
     }
 
     async updateDefaultStatus(userId: string, teamId: string, defaultStatus: Status) {
-        await ipcRenderer.invoke("store-update-default-status", userId, teamId, defaultStatus);
+        await window.store.updateDefaultStatus(userId, teamId, defaultStatus);
     }
 
     async getLanguage(): Promise<string> {
-        return (await ipcRenderer.invoke("store-get-language")) as string;
+        return await window.store.getLanguage();
     }
 
     async setLanguage(value: string) {
-        await ipcRenderer.invoke("store-set-language", value);
+        await window.store.setLanguage(value);
     }
 }

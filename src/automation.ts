@@ -1,16 +1,24 @@
 // execute on main process
-import { ipcMain } from "electron";
+import { ipcMain, ipcRenderer } from "electron";
 import { setInterval, clearInterval } from "timers";
 import { Account, Status, StatusAutomation } from "./app/entities";
-import { createSlackClient } from "./app/slack";
 import { Logger } from "./logger";
 import { v4, v6 } from "public-ip";
+import { Slack } from "./slack";
 const wifi = require("node-wifi");
+
+export interface AutomationApi {
+    update: (accounts: Account[]) => void;
+}
+
+export const automationApi: AutomationApi = {
+    update: (accounts: Account[]) => ipcRenderer.send("automation-update", accounts),
+};
 
 export class Automation {
     private timers: AccountTimer[] = [];
 
-    constructor(private readonly logger: Logger) {}
+    constructor(private readonly logger: Logger, private readonly slack: Slack) {}
 
     start() {
         wifi.init({ iface: null });
@@ -20,7 +28,7 @@ export class Automation {
                 if (foundTimer != null) {
                     foundTimer.update(account);
                 } else {
-                    const newTimer = new AccountTimer(this.logger, account.userId, account.teamId);
+                    const newTimer = new AccountTimer(this.logger, this.slack, account.userId, account.teamId);
                     newTimer.update(account);
                     this.timers.push(newTimer);
                 }
@@ -54,7 +62,12 @@ class AccountTimer {
     private cachedAccount: Account | null = null;
     private currentStatus: Status | null = null;
 
-    constructor(private readonly logger: Logger, public readonly userId: string, public readonly teamId: string) {}
+    constructor(
+        private readonly logger: Logger,
+        private readonly slack: Slack,
+        public readonly userId: string,
+        public readonly teamId: string
+    ) {}
 
     applicationLog(value: string) {
         this.logger.log(`application: ${value}`);
@@ -148,7 +161,7 @@ class AccountTimer {
             this.currentStatus.emoji?.key != nextStatus.emoji?.key ||
             this.currentStatus.message != nextStatus.message
         ) {
-            const client = createSlackClient(account.token);
+            const client = this.slack.createSlackClient(account.token);
             let status;
             if (nextStatus.emoji != null) {
                 status = { status_text: nextStatus.message, status_emoji: `:${nextStatus.emoji.key}:` };

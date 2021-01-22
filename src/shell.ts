@@ -1,5 +1,15 @@
 // execute on main process
-import { shell, ipcMain } from "electron";
+import { shell, ipcMain, ipcRenderer } from "electron";
+
+export interface ShellApi {
+    openExternalBrowser: (url: string) => void;
+}
+
+export const shellApi: ShellApi = {
+    openExternalBrowser: (url: string) => {
+        ipcRenderer.send("shell-open-external-browser", url);
+    },
+};
 
 export class Shell {
     start() {

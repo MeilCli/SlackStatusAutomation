@@ -1,11 +1,17 @@
 import { Injectable } from "@angular/core";
-import { ipcRenderer } from "electron";
+import { ShellApi } from "src/shell";
+
+declare global {
+    interface Window {
+        shell: ShellApi;
+    }
+}
 
 @Injectable({
     providedIn: "root",
 })
 export class ShellService {
     openExternalBrowser(url: string) {
-        ipcRenderer.send("shell-open-external-browser", url);
+        window.shell.openExternalBrowser(url);
     }
 }

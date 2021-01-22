@@ -1,11 +1,11 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
-import { createSlackClient, OauthV2AccessResult, AuthTestResult } from "../../slack";
+import { Component, OnInit, OnDestroy, NgZone } from "@angular/core";
 import { environment } from "../../../environments/environment";
 import { StoreService } from "src/app/services/store.service";
 import { Router } from "@angular/router";
 import { Status, StatusAutomation } from "src/app/entities";
 import { ShellService } from "src/app/services/shell.service";
 import { OauthService } from "src/app/services/oauth.service";
+import { SlackService } from "src/app/services/slack.service";
 
 interface Application {
     clientId: string;
@@ -33,9 +33,11 @@ export class OauthComponent implements OnInit, OnDestroy {
 
     constructor(
         private router: Router,
+        private readonly zone: NgZone,
         private readonly storeService: StoreService,
         private readonly shellService: ShellService,
-        private readonly oauthService: OauthService
+        private readonly oauthService: OauthService,
+        private readonly slackService: SlackService
     ) {}
 
     authorizeUrl(clientId: string): string {
@@ -47,7 +49,9 @@ export class OauthComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.oauthService.start((code) => {
-            this.requestAccessToken(code);
+            this.zone.run(() => {
+                this.requestAccessToken(code);
+            });
         });
     }
 
@@ -95,15 +99,13 @@ export class OauthComponent implements OnInit, OnDestroy {
         if (currentRequestClient == null) {
             return;
         }
-        const noAuthorizedClient = createSlackClient(undefined);
-        const oauthAccessResponse = (await noAuthorizedClient.oauth.v2.access({
+        const oauthAccessResponse = await this.slackService.oauthV2Access(
             code,
-            client_id: currentRequestClient[0],
-            client_secret: currentRequestClient[1],
-            redirect_uri: "http://localhost:3333/",
-        })) as OauthV2AccessResult;
-        const autorizedClient = createSlackClient(oauthAccessResponse.authed_user.access_token);
-        const authTestResponse = (await autorizedClient.auth.test()) as AuthTestResult;
+            currentRequestClient[0],
+            currentRequestClient[1],
+            "http://localhost:3333/"
+        );
+        const authTestResponse = await this.slackService.authTest(oauthAccessResponse.authed_user.access_token);
         await this.storeService.addAccount(
             oauthAccessResponse.authed_user.access_token,
             authTestResponse.user_id,

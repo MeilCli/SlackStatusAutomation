@@ -1,5 +1,27 @@
 // execute on main process
-import { ipcMain, BrowserWindow } from "electron";
+import { ipcMain, ipcRenderer, BrowserWindow } from "electron";
+
+export interface LoggerApi {
+    logged: (handler: (log: string) => void) => void;
+    new: (log: string) => void;
+    get: () => Promise<string[]>;
+}
+
+export const loggerApi: LoggerApi = {
+    logged: (handler: (log: string) => void) => {
+        ipcRenderer.on("logger-logged", (_, log) => {
+            if (typeof log == "string") {
+                handler(log);
+            }
+        });
+    },
+    new: (log: string) => {
+        ipcRenderer.send("logger-new", log);
+    },
+    get: async () => {
+        return (await ipcRenderer.invoke("logger-get")) as string[];
+    },
+};
 
 export class Logger {
     private logs: string[] = [];

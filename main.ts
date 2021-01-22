@@ -5,6 +5,7 @@ import { Automation } from "./src/automation";
 import { Shell } from "./src/shell";
 import { Oauth } from "./src/oauth";
 import { Store } from "./src/store";
+import { Slack } from "./src/slack";
 
 let win: BrowserWindow | null = null;
 const args = process.argv.slice(1),
@@ -14,7 +15,10 @@ const mb = menubar({
     browserWindow: {
         width: 600,
         height: 800,
-        webPreferences: { nodeIntegration: true, contextIsolation: false, enableRemoteModule: true },
+        webPreferences: {
+            contextIsolation: true,
+            preload: `${__dirname}/preload.js`,
+        },
     },
     icon: `${__dirname}/build/menu.png`,
 });
@@ -30,10 +34,8 @@ function createWindow(): BrowserWindow {
         width: serve ? 1200 : 600,
         height: 800,
         webPreferences: {
-            nodeIntegration: true,
-            allowRunningInsecureContent: serve ? true : false,
-            contextIsolation: false,
-            enableRemoteModule: true,
+            contextIsolation: true,
+            preload: `${__dirname}/preload.js`,
         },
     });
 
@@ -58,7 +60,8 @@ function createWindow(): BrowserWindow {
 
 try {
     const logger = new Logger();
-    const automation = new Automation(logger);
+    const slack = new Slack();
+    const automation = new Automation(logger, slack);
     const shell = new Shell();
     const oauth = new Oauth();
     const store = new Store();
@@ -120,6 +123,7 @@ try {
     });
 
     logger.start();
+    slack.start();
     automation.start();
     shell.start();
     oauth.start();

@@ -1,7 +1,53 @@
 // execute on main process
-import { ipcMain, app } from "electron";
+import { ipcMain, ipcRenderer, app } from "electron";
 import * as ElectronStore from "electron-store";
 import { Account, Emoji, EmojiAlias, StatusAutomation, Status } from "./app/entities";
+
+export interface StoreApi {
+    addAccount: (token: string, userId: string, userName: string, teamId: string, teamName: string) => Promise<void>;
+    clearAccounts: () => Promise<void>;
+    getAccounts: () => Promise<Account[]>;
+    updateIntervalSeconds: (userId: string, teamId: string, intervalSeconds: number) => Promise<void>;
+    updateAutomationEnabled: (userId: string, teamId: string, automationEnabled: boolean) => Promise<void>;
+    updateEmojiList: (userId: string, teamId: string, emojiList: (Emoji | EmojiAlias)[]) => Promise<void>;
+    updateStatusAutomations: (userId: string, teamId: string, statusAutomations: StatusAutomation[]) => Promise<void>;
+    updateDefaultStatus: (userId: string, teamId: string, defaultStatus: Status) => Promise<void>;
+    getLanguage: () => Promise<string>;
+    setLanguage: (value: string) => Promise<void>;
+}
+
+export const storeApi: StoreApi = {
+    addAccount: async (token: string, userId: string, userName: string, teamId: string, teamName: string) => {
+        await ipcRenderer.invoke("store-add-account", token, userId, userName, teamId, teamName);
+    },
+    clearAccounts: async () => {
+        await ipcRenderer.invoke("store-clear-accounts");
+    },
+    getAccounts: async () => {
+        return (await ipcRenderer.invoke("store-get-accounts")) as Account[];
+    },
+    updateIntervalSeconds: async (userId: string, teamId: string, intervalSeconds: number) => {
+        await ipcRenderer.invoke("store-update-interval-seconds", userId, teamId, intervalSeconds);
+    },
+    updateAutomationEnabled: async (userId: string, teamId: string, automationEnabled: boolean) => {
+        await ipcRenderer.invoke("store-update-automation-enabled", userId, teamId, automationEnabled);
+    },
+    updateEmojiList: async (userId: string, teamId: string, emojiList: (Emoji | EmojiAlias)[]) => {
+        await ipcRenderer.invoke("store-update-emoji-list", userId, teamId, emojiList);
+    },
+    updateStatusAutomations: async (userId: string, teamId: string, statusAutomations: StatusAutomation[]) => {
+        await ipcRenderer.invoke("store-update-status-automations", userId, teamId, statusAutomations);
+    },
+    updateDefaultStatus: async (userId: string, teamId: string, defaultStatus: Status) => {
+        await ipcRenderer.invoke("store-update-default-status", userId, teamId, defaultStatus);
+    },
+    getLanguage: async () => {
+        return (await ipcRenderer.invoke("store-get-language")) as string;
+    },
+    setLanguage: async (value: string) => {
+        await ipcRenderer.invoke("store-set-language", value);
+    },
+};
 
 const defaultIntervalSeconds = 180;
 
