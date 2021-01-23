@@ -2,8 +2,10 @@ import { Component } from "@angular/core";
 import { Router } from "@angular/router";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { StoreService } from "src/app/services/store.service";
+import { TranslateService } from "src/app/services/translate.service";
 import { Account } from "../../entities";
 import { AccountDeleteModalComponent } from "../account-delete-modal/account-delete-modal.component";
+import { AccountTranslate } from "./account.translate";
 
 @Component({
     selector: "app-account",
@@ -13,12 +15,18 @@ import { AccountDeleteModalComponent } from "../account-delete-modal/account-del
 export class AccountComponent {
     public accounts: Account[] = [];
     public currentAccount: Account | null = null;
+    public accountTranslate: AccountTranslate;
 
     constructor(
         private readonly storeService: StoreService,
+        private readonly translateService: TranslateService,
         private readonly router: Router,
         private readonly modalService: NgbModal
     ) {
+        this.accountTranslate = this.translateService.getDefaultAppTranslate().accountTranslate;
+        this.translateService.getAppTranslate().then((value) => {
+            this.accountTranslate = value.accountTranslate;
+        });
         this.storeService.getAccounts().then((accounts) => {
             this.accounts = accounts;
         });

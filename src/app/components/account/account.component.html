@@ -1,13 +1,14 @@
 <app-header></app-header>
 <div class="container">
-    <h2>Account</h2>
-    <p>Current account: {{ currentAccount?.teamName }}/{{ currentAccount?.userName }}</p>
+    <h2>{{ accountTranslate.title }}</h2>
+    <p>{{ accountTranslate.currentAccount(currentAccount) }}</p>
     <h3>
-        Account List<button
+        {{ accountTranslate.accountList
+        }}<button
             mat-icon-button
             class="mat-button"
             [autoClose]="'outside'"
-            ngbPopover="Homes and emojis exist for each account. Therefore, Automation settings must be set for each account."
+            [ngbPopover]="accountTranslate.accountListHelp"
         >
             <mat-icon fontSet="material-icons-two-tone">help</mat-icon></button
         ><button mat-icon-button class="mat-button float-right" (click)="addAccount()">
