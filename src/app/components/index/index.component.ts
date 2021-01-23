@@ -11,8 +11,8 @@ export class IndexComponent implements OnInit {
     constructor(private router: Router, private storeService: StoreService) {}
 
     ngOnInit(): void {
-        this.storeService.getAccounts().then((accounts) => {
-            if (0 < accounts.length) {
+        this.storeService.getCurrentAccount().then((account) => {
+            if (account != null) {
                 this.router.navigateByUrl("/home");
             } else {
                 this.router.navigateByUrl("/oauth");

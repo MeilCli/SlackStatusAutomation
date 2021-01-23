@@ -32,8 +32,11 @@ export class EmojiComponent {
         private readonly translateService: TranslateService,
         private readonly slackService: SlackService
     ) {
-        this.storeService.getAccounts().then((accounts) => {
-            this.account = accounts[0];
+        this.storeService.getCurrentAccount().then((account) => {
+            if (account == null) {
+                throw Error();
+            }
+            this.account = account;
             this.updateCustomEmojis();
         });
         this.emojiTranslate = this.translateService.getDefaultAppTranslate().emojiTranslate;

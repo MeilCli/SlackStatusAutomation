@@ -26,6 +26,14 @@ export class StoreService {
         return await window.store.getAccounts();
     }
 
+    async getCurrentAccount(): Promise<Account | null> {
+        return await window.store.getCurrentAccount();
+    }
+
+    async setCurrentAccount(userId: string, teamId: string) {
+        await window.store.setCurrentAccount(userId, teamId);
+    }
+
     async updateIntervalSeconds(userId: string, teamId: string, intervalSeconds: number) {
         await window.store.updateIntervalSeconds(userId, teamId, intervalSeconds);
     }

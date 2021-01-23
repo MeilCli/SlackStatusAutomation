@@ -59,8 +59,11 @@ export class HomeComponent {
         private readonly translateService: TranslateService,
         private readonly modalService: NgbModal
     ) {
-        this.storeService.getAccounts().then((accounts) => {
-            this.account = accounts[0];
+        this.storeService.getCurrentAccount().then((account) => {
+            if (account == null) {
+                throw Error();
+            }
+            this.account = account;
             this._automationEnabled = this.account.automationEnabled;
             this._intervalSeconds = this.account.intervalSeconds;
             this.statusAutomations = this.account.statusAutomations;

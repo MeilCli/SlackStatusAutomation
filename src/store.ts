@@ -7,6 +7,8 @@ export interface StoreApi {
     addAccount: (token: string, userId: string, userName: string, teamId: string, teamName: string) => Promise<void>;
     clearAccounts: () => Promise<void>;
     getAccounts: () => Promise<Account[]>;
+    getCurrentAccount: () => Promise<Account | null>;
+    setCurrentAccount: (userId: string, teamId: string) => Promise<void>;
     updateIntervalSeconds: (userId: string, teamId: string, intervalSeconds: number) => Promise<void>;
     updateAutomationEnabled: (userId: string, teamId: string, automationEnabled: boolean) => Promise<void>;
     updateEmojiList: (userId: string, teamId: string, emojiList: (Emoji | EmojiAlias)[]) => Promise<void>;
@@ -25,6 +27,12 @@ export const storeApi: StoreApi = {
     },
     getAccounts: async () => {
         return (await ipcRenderer.invoke("store-get-accounts")) as Account[];
+    },
+    getCurrentAccount: async () => {
+        return (await ipcRenderer.invoke("store-get-current-account")) as Account | null;
+    },
+    setCurrentAccount: async (userId: string, teamId: string) => {
+        await ipcRenderer.invoke("store-set-current-account", userId, teamId);
     },
     updateIntervalSeconds: async (userId: string, teamId: string, intervalSeconds: number) => {
         await ipcRenderer.invoke("store-update-interval-seconds", userId, teamId, intervalSeconds);
@@ -80,6 +88,15 @@ export class Store {
         });
         ipcMain.handle("store-get-accounts", () => {
             return this.getAccounts();
+        });
+        ipcMain.handle("store-get-current-account", () => {
+            return this.getCurrentAccount();
+        });
+        ipcMain.handle("store-set-current-account", (_, userId, teamId) => {
+            if (typeof userId != "string" || typeof teamId != "string") {
+                throw Error();
+            }
+            this.setCurrentAccount(userId, teamId);
         });
         ipcMain.handle("store-update-interval-seconds", (_, userId, teamId, intervalSeconds) => {
             if (typeof userId != "string" || typeof teamId != "string" || typeof intervalSeconds != "number") {
@@ -151,6 +168,25 @@ export class Store {
 
     getAccounts(): Account[] {
         return this.store.get("accounts", []);
+    }
+
+    getCurrentAccount(): Account | null {
+        const currentAccount = this.store.get("currentAccount", { userId: "", teamId: "" });
+        const accounts = this.getAccounts();
+        const foundAccount = accounts.find(
+            (x) => x.userId == currentAccount.userId && x.teamId == currentAccount.teamId
+        );
+        if (foundAccount != undefined) {
+            return foundAccount;
+        }
+        if (0 < accounts.length) {
+            return accounts[0];
+        }
+        return null;
+    }
+
+    setCurrentAccount(userId: string, teamId: string) {
+        this.store.set("currentAccount", { userId, teamId });
     }
 
     updateIntervalSeconds(userId: string, teamId: string, intervalSeconds: number) {
