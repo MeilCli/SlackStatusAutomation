@@ -21,6 +21,11 @@ import { EmojiTranslate, enEmojiTranslate, jaEmojiTranslate } from "./components
 import { LogTranslate, enLogTranslate, jaLogTranslate } from "./components/log/log.translate";
 import { AboutTranslate, enAboutTranslate, jaAboutTanslate } from "./components/about/about.translate";
 import { AccountTranslate, enAccountTranslate, jaAccountTranslate } from "./components/account/account.translate";
+import {
+    AccountDeleteModalTranslate,
+    enAccountDeleteModalTranslate,
+    jaAccountDeleteModalTranslate,
+} from "./components/account-delete-modal/account-delete-modal.translate";
 
 export interface AppTranslate {
     homeTranslate: HomeTranslate;
@@ -34,6 +39,7 @@ export interface AppTranslate {
     logTranslate: LogTranslate;
     aboutTranslate: AboutTranslate;
     accountTranslate: AccountTranslate;
+    accountDeleteModalTranslate: AccountDeleteModalTranslate;
 }
 
 export const enAppTranslate: AppTranslate = {
@@ -48,6 +54,7 @@ export const enAppTranslate: AppTranslate = {
     logTranslate: enLogTranslate,
     aboutTranslate: enAboutTranslate,
     accountTranslate: enAccountTranslate,
+    accountDeleteModalTranslate: enAccountDeleteModalTranslate,
 };
 export const jaAppTranslate: AppTranslate = {
     homeTranslate: jaHomeTranslate,
@@ -61,4 +68,5 @@ export const jaAppTranslate: AppTranslate = {
     logTranslate: jaLogTranslate,
     aboutTranslate: jaAboutTanslate,
     accountTranslate: jaAccountTranslate,
+    accountDeleteModalTranslate: jaAccountDeleteModalTranslate,
 };
