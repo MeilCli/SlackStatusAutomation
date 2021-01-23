@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, NgZone } from "@angular/core";
 import { environment } from "../../../environments/environment";
 import { StoreService } from "src/app/services/store.service";
 import { Router } from "@angular/router";
-import { Status, StatusAutomation } from "src/app/entities";
+import { Account, Status, StatusAutomation } from "src/app/entities";
 import { ShellService } from "src/app/services/shell.service";
 import { OauthService } from "src/app/services/oauth.service";
 import { SlackService } from "src/app/services/slack.service";
@@ -27,6 +27,7 @@ interface Environment {
 export class OauthComponent implements OnInit, OnDestroy {
     private currentRequest: "custom" | number | null = null;
 
+    public accounts: Account[] = [];
     public customClientId = "";
     public customClientSecret = "";
     public environment: Environment = environment;
@@ -38,7 +39,11 @@ export class OauthComponent implements OnInit, OnDestroy {
         private readonly shellService: ShellService,
         private readonly oauthService: OauthService,
         private readonly slackService: SlackService
-    ) {}
+    ) {
+        this.storeService.getAccounts().then((accounts) => {
+            this.accounts = accounts;
+        });
+    }
 
     authorizeUrl(clientId: string): string {
         const clientIdParameter = `client_id=${clientId}`;

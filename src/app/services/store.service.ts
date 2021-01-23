@@ -1,6 +1,4 @@
 import { Injectable } from "@angular/core";
-import { ipcRenderer } from "electron";
-import { windowsStore } from "process";
 import { StoreApi } from "src/store";
 import { Account, Emoji, EmojiAlias, StatusAutomation, Status } from "../entities";
 
@@ -18,8 +16,8 @@ export class StoreService {
         await window.store.addAccount(token, userId, userName, teamId, teamName);
     }
 
-    async clearAccounts() {
-        await window.store.clearAccounts();
+    async removeAccount(userId: string, teamId: string) {
+        await window.store.removeAccount(userId, teamId);
     }
 
     async getAccounts(): Promise<Account[]> {

@@ -1,7 +1,52 @@
 <app-header></app-header>
 <div class="container">
     <h2>Account</h2>
-    <div class="text-center">
-        <button type="button" class="btn btn-danger mt-5" (click)="clearAccounts()">Clear accounts</button>
-    </div>
+    <p>Current account: {{ currentAccount?.teamName }}/{{ currentAccount?.userName }}</p>
+    <h3>
+        Account List<button
+            mat-icon-button
+            class="mat-button"
+            [autoClose]="'outside'"
+            ngbPopover="Homes and emojis exist for each account. Therefore, Automation settings must be set for each account."
+        >
+            <mat-icon fontSet="material-icons-two-tone">help</mat-icon></button
+        ><button mat-icon-button class="mat-button float-right" (click)="addAccount()">
+            <mat-icon fontSet="material-icons-two-tone">person_add</mat-icon>
+        </button>
+    </h3>
+    <ul class="list-group list-group-flush">
+        <li class="list-group-item account-list-item" *ngFor="let account of accounts; index as i">
+            <div class="col input-group">
+                <input
+                    readonly
+                    type="text"
+                    class="form-control"
+                    aria-describedby="addon-append"
+                    [(ngModel)]="account.teamName + '/' + account.userName"
+                />
+                <div class="input-group-append" id="addon-append">
+                    <div *ngIf="2 <= accounts.length">
+                        <button
+                            *ngIf="account.userId == currentAccount?.userId && account.teamId == currentAccount?.teamId"
+                            class="btn btn-outline-secondary"
+                            type="button"
+                        >
+                            <mat-icon fontSet="material-icons-two-tone">visibility</mat-icon>
+                        </button>
+                        <button
+                            *ngIf="account.userId != currentAccount?.userId || account.teamId != currentAccount?.teamId"
+                            class="btn btn-outline-secondary"
+                            type="button"
+                            (click)="setCurrentAccount(i)"
+                        >
+                            <mat-icon fontSet="material-icons-two-tone">visibility_off</mat-icon>
+                        </button>
+                    </div>
+                    <button class="btn btn-outline-secondary" type="button" (click)="removeAccount(i)">
+                        <mat-icon fontSet="material-icons-two-tone">person_remove</mat-icon>
+                    </button>
+                </div>
+            </div>
+        </li>
+    </ul>
 </div>

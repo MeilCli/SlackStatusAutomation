@@ -5,7 +5,7 @@ import { Account, Emoji, EmojiAlias, StatusAutomation, Status } from "./app/enti
 
 export interface StoreApi {
     addAccount: (token: string, userId: string, userName: string, teamId: string, teamName: string) => Promise<void>;
-    clearAccounts: () => Promise<void>;
+    removeAccount: (userId: string, teamId: string) => Promise<void>;
     getAccounts: () => Promise<Account[]>;
     getCurrentAccount: () => Promise<Account | null>;
     setCurrentAccount: (userId: string, teamId: string) => Promise<void>;
@@ -22,8 +22,8 @@ export const storeApi: StoreApi = {
     addAccount: async (token: string, userId: string, userName: string, teamId: string, teamName: string) => {
         await ipcRenderer.invoke("store-add-account", token, userId, userName, teamId, teamName);
     },
-    clearAccounts: async () => {
-        await ipcRenderer.invoke("store-clear-accounts");
+    removeAccount: async (userId: string, teamId: string) => {
+        await ipcRenderer.invoke("store-remove-account", userId, teamId);
     },
     getAccounts: async () => {
         return (await ipcRenderer.invoke("store-get-accounts")) as Account[];
@@ -83,8 +83,11 @@ export class Store {
             }
             this.addAccount(token, userId, userName, teamId, teamName);
         });
-        ipcMain.handle("store-clear-accounts", () => {
-            this.clearAccounts();
+        ipcMain.handle("store-remove-account", (_, userId, teamId) => {
+            if (typeof userId != "string" || typeof teamId != "string") {
+                throw Error();
+            }
+            this.removeAccount(userId, teamId);
         });
         ipcMain.handle("store-get-accounts", () => {
             return this.getAccounts();
@@ -162,8 +165,10 @@ export class Store {
         this.store.set("accounts", accounts);
     }
 
-    clearAccounts() {
-        this.store.delete("accounts");
+    removeAccount(userId: string, teamId: string) {
+        let accounts = this.getAccounts();
+        accounts = accounts.filter((x) => (x.userId == userId && x.teamId == teamId) == false);
+        this.store.set("accounts", accounts);
     }
 
     getAccounts(): Account[] {
