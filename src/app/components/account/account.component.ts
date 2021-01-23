@@ -1,7 +1,9 @@
 import { Component } from "@angular/core";
 import { Router } from "@angular/router";
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { StoreService } from "src/app/services/store.service";
 import { Account } from "../../entities";
+import { AccountDeleteModalComponent } from "../account-delete-modal/account-delete-modal.component";
 
 @Component({
     selector: "app-account",
@@ -12,7 +14,11 @@ export class AccountComponent {
     public accounts: Account[] = [];
     public currentAccount: Account | null = null;
 
-    constructor(private readonly storeService: StoreService, private readonly router: Router) {
+    constructor(
+        private readonly storeService: StoreService,
+        private readonly router: Router,
+        private readonly modalService: NgbModal
+    ) {
         this.storeService.getAccounts().then((accounts) => {
             this.accounts = accounts;
         });
@@ -33,6 +39,9 @@ export class AccountComponent {
             return;
         }
         const removeAccount = this.accounts[index];
+        const modalRef = this.modalService.open(AccountDeleteModalComponent);
+        (modalRef.componentInstance as AccountDeleteModalComponent).account = removeAccount;
+        await modalRef.result;
         await this.storeService.removeAccount(removeAccount.userId, removeAccount.teamId);
         this.accounts = await this.storeService.getAccounts();
         if (0 < this.accounts.length) {

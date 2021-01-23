@@ -24,6 +24,7 @@ import { AboutComponent } from "./components/about/about.component";
 import { StatusComponent } from "./components/status/status.component";
 import { LanguageComponent } from "./components/language/language.component";
 import { HomeDeleteModalComponent } from "./components/home-delete-modal/home-delete-modal.component";
+import { AccountDeleteModalComponent } from "./components/account-delete-modal/account-delete-modal.component";
 
 @NgModule({
     declarations: [
@@ -42,6 +43,7 @@ import { HomeDeleteModalComponent } from "./components/home-delete-modal/home-de
         StatusComponent,
         LanguageComponent,
         HomeDeleteModalComponent,
+        AccountDeleteModalComponent,
     ],
     imports: [
         BrowserModule,
