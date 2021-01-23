@@ -51,12 +51,15 @@ export const storeApi: StoreApi = {
 
 const defaultIntervalSeconds = 180;
 
+type StoreType = {
+    accounts: Account[];
+    currentAccount: { userId: string; teamId: string };
+    language: string;
+};
+
 export class Store {
-    private accountsKey = "tokens";
     // not for security, for obfuscation
-    private accountStore = new ElectronStore<Record<string, Account[]>>({ encryptionKey: "SlackStatusAutomation" });
-    private languageKey = "language";
-    private languageStore = new ElectronStore<Record<string, string>>({ name: "language" });
+    private store = new ElectronStore<StoreType>({ encryptionKey: "SlackStatusAutomation" });
 
     start() {
         ipcMain.handle("store-add-account", (_, token, userId, userName, teamId, teamName) => {
@@ -109,18 +112,18 @@ export class Store {
             this.updateDefaultStatus(userId, teamId, defaultStatus as Status);
         });
         ipcMain.handle("store-get-language", () => {
-            return this.languageStore.get(this.languageKey, app.getLocale());
+            return this.getLanguage();
         });
         ipcMain.handle("store-set-language", (_, value) => {
             if (typeof value != "string") {
                 throw Error();
             }
-            this.languageStore.set(this.languageKey, value);
+            this.setLanguage(value);
         });
     }
 
     addAccount(token: string, userId: string, userName: string, teamId: string, teamName: string) {
-        const accounts = this.accountStore.get(this.accountsKey, []);
+        const accounts = this.store.get("accounts", []);
         const foundIndex = accounts.findIndex((x) => x.userId == userId && x.teamId == teamId);
         if (0 <= foundIndex) {
             accounts[foundIndex].token = token;
@@ -139,67 +142,67 @@ export class Store {
             });
         }
 
-        this.accountStore.set(this.accountsKey, accounts);
+        this.store.set("accounts", accounts);
     }
 
     clearAccounts() {
-        this.accountStore.delete(this.accountsKey);
+        this.store.delete("accounts");
     }
 
     getAccounts(): Account[] {
-        return this.accountStore.get(this.accountsKey, []);
+        return this.store.get("accounts", []);
     }
 
     updateIntervalSeconds(userId: string, teamId: string, intervalSeconds: number) {
-        const accounts = this.accountStore.get(this.accountsKey, []);
+        const accounts = this.store.get("accounts", []);
         const foundIndex = accounts.findIndex((x) => x.userId == userId && x.teamId == teamId);
         if (0 <= foundIndex) {
             accounts[foundIndex].intervalSeconds = intervalSeconds;
-            this.accountStore.set(this.accountsKey, accounts);
+            this.store.set("accounts", accounts);
         }
     }
 
     updateAutomationEnabled(userId: string, teamId: string, automationEnabled: boolean) {
-        const accounts = this.accountStore.get(this.accountsKey, []);
+        const accounts = this.store.get("accounts", []);
         const foundIndex = accounts.findIndex((x) => x.userId == userId && x.teamId == teamId);
         if (0 <= foundIndex) {
             accounts[foundIndex].automationEnabled = automationEnabled;
-            this.accountStore.set(this.accountsKey, accounts);
+            this.store.set("accounts", accounts);
         }
     }
 
     updateEmojiList(userId: string, teamId: string, emojiList: (Emoji | EmojiAlias)[]) {
-        const accounts = this.accountStore.get(this.accountsKey, []);
+        const accounts = this.store.get("accounts", []);
         const foundIndex = accounts.findIndex((x) => x.userId == userId && x.teamId == teamId);
         if (0 <= foundIndex) {
             accounts[foundIndex].emojiList = emojiList;
-            this.accountStore.set(this.accountsKey, accounts);
+            this.store.set("accounts", accounts);
         }
     }
 
     updateStatusAutomations(userId: string, teamId: string, statusAutomations: StatusAutomation[]) {
-        const accounts = this.accountStore.get(this.accountsKey, []);
+        const accounts = this.store.get("accounts", []);
         const foundIndex = accounts.findIndex((x) => x.userId == userId && x.teamId == teamId);
         if (0 <= foundIndex) {
             accounts[foundIndex].statusAutomations = statusAutomations;
-            this.accountStore.set(this.accountsKey, accounts);
+            this.store.set("accounts", accounts);
         }
     }
 
     updateDefaultStatus(userId: string, teamId: string, defaultStatus: Status) {
-        const accounts = this.accountStore.get(this.accountsKey, []);
+        const accounts = this.store.get("accounts", []);
         const foundIndex = accounts.findIndex((x) => x.userId == userId && x.teamId == teamId);
         if (0 <= foundIndex) {
             accounts[foundIndex].defaultStatus = defaultStatus;
-            this.accountStore.set(this.accountsKey, accounts);
+            this.store.set("accounts", accounts);
         }
     }
 
     getLanguage(): string {
-        return this.languageStore.get(this.languageKey, navigator.language);
+        return this.store.get("language", app.getLocale());
     }
 
     setLanguage(value: string) {
-        this.languageStore.set(this.languageKey, value);
+        this.store.set("language", value);
     }
 }
